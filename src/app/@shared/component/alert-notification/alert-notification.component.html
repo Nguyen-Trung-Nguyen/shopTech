@@ -1,0 +1,7 @@
+<div class="wrapper">
+    <div *ngIf="error">
+        <p>message: {{error.message}}</p>
+        <p>statusCode: {{error.statusCode}}</p>
+        <p>timestamp: {{error.timestamp | date: 'M/d/yy, h:mm a'}}</p>
+    </div>
+</div>

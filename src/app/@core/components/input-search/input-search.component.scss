@@ -1,0 +1,33 @@
+.image-product {
+	max-width: 100%;
+	max-height: 100%;
+	min-height: auto;
+	min-width: auto;
+}
+.item {
+	height: 85px;
+}
+
+.payPrice {
+	font-size: 16px;
+	line-height: 16px;
+	color: var(--tui-negative);
+}
+.price {
+	font-size: 13px;
+	line-height: 16px;
+	color: var(--tui-text-02);
+	text-decoration: line-through;
+}
+.percent {
+	line-height: 16px;
+	font-size: 11px;
+}
+.prefix {
+	position: relative;
+	left: -0.3em;
+	vertical-align: super;
+	padding-bottom: 0.38em;
+	background: #fff;
+	font-size: 0.76em;
+}

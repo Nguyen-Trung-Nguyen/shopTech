@@ -1,0 +1,50 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background-color: #fbf7fb;
+}
+ol,
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+// color basic
+.success {
+	position: relative;
+	color: var(--tui-success-fill);
+}
+.error {
+	position: relative;
+	color: var(--tui-error-fill);
+}
+
+.primary {
+	color: var(--tui-base-09);
+}
+
+.primary:hover {
+	color: var(--tui-base-07);
+	transition: ease-in 0.2s;
+}
+// active link
+.active {
+	color: var(--tui-negative);
+}
+a {
+	color: var(--tui-text-01);
+	text-decoration: none;
+}
+
+a:hover {
+	color: var(--tui-negative);
+}
+
+.gray {
+	color: var(--tui-text-02);
+}

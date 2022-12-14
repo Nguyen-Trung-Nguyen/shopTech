@@ -1,0 +1,71 @@
+<div class="wrapper">
+    <div class="header"
+         fxLayout="row"
+         fxLayoutAlign="center center"
+         fxLayoutGap="2rem">
+        <div class="input-search"
+             fxFlex="70%">
+            <tui-input [formControl]="search"
+                       [tuiTextfieldLabelOutside]="true"
+                       [tuiTextfieldCleaner]="true"
+                       tuiTextfieldSize="m">
+                Tim kiếm sản phẩm...
+                <tui-data-list *tuiDataList>
+                    <a *ngFor="let item of searchResult$ |async"
+                       fxLayout="row"
+                       fxLayoutGap="0.5rem"
+                       fxLayoutAlign="start start"
+                       [routerLink]="item.slug"
+                       tuiOption>
+                        <img class="image"
+                             fxFlex="50px"
+                             [src]="item.thumbnail.url" />
+                        <p class="tui-text_body-m">{{item.name}}</p>
+                    </a>
+                </tui-data-list>
+            </tui-input>
+        </div>
+        <div class="input-select"
+             fxFlex="30%">
+            <tui-select [formControl]="filter"
+                        *ngIf="categories$ | async as categories"
+                        tuiTextfieldSize="m"
+                        [valueContent]="value"
+                        [tuiTextfieldLabelOutside]="true">
+                <ng-template #value
+                             let-item>
+                    <div fxLayout="row"
+                         fxLayoutGap="1rem">
+                        <img class="icon"
+                             [src]="item.image.url" />
+                        <p> {{item.name}}</p>
+                    </div>
+                </ng-template>
+                <ng-template tuiDataList>
+                    <tui-data-list>
+                        <ng-container *ngFor="let item of categories">
+                            <tui-opt-group [label]="item.name"
+                                           *ngIf="item.subcategories.length > 0;else nosub">
+                                <tui-opt-group>
+                                    <button *ngFor="let item of item.subcategories"
+                                            tuiOption
+                                            [value]="item">
+                                        {{ item.name}}
+                                    </button>
+                                </tui-opt-group>
+                            </tui-opt-group>
+                            <ng-template #nosub>
+                                <tui-opt-group>
+                                    <button tuiOption
+                                            [value]="item">
+                                        {{ item.name}}
+                                    </button>
+                                </tui-opt-group>
+                            </ng-template>
+                        </ng-container>
+                    </tui-data-list>
+                </ng-template>
+            </tui-select>
+        </div>
+    </div>
+</div>

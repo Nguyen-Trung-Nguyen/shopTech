@@ -1,0 +1,65 @@
+<div class="wrapper">
+    <div class="body">
+        <form [formGroup]="addForm"
+              (submit)="create()">
+            <div fxLayout="row"
+                 class="tui-form__header tui-form__header_margin-top_none"
+                 fxLayoutGap="0.5rem">
+                <span class="active">*</span>
+                <p class="tui-text_body-l-2">Chọn loại</p>
+            </div>
+            <div class="tui-form__row">
+                <tui-select formControlName="content"
+                            tuiTextfieldSize="m"
+                            [tuiTextfieldLabelOutside]="true"
+                            [valueContent]="itemContent">
+                    Chọn danh mục cha
+                    <tui-data-list-wrapper *tuiDataList
+                                           [itemContent]="itemContent"
+                                           [items]="option"></tui-data-list-wrapper>
+                </tui-select>
+                <ng-template #itemContent
+                             let-item>
+                    <p> {{item}}</p>
+                </ng-template>
+            </div>
+            <div fxLayout="row"
+                 class="tui-form__header"
+                 fxLayoutGap="0.5rem">
+                <span class="active">*</span>
+                <p class="tui-text_body-l-2">Hình ảnh</p>
+            </div>
+            <div class="tui-form__row">
+                <tui-input-files accept="image/*"
+                                 *ngIf="!addForm.value.file"
+                                 (reject)="onReject($event)"
+                                 formControlName="file"
+                                 tuiTextfieldSize="m"></tui-input-files>
+                <tui-files class="tui-space_top-1">
+                    <tui-file *ngIf="addForm.get('file').valueChanges| async as file"
+                              [file]="file"
+                              [leftContent]="content"
+                              (removed)="removeFile()"></tui-file>
+                    <tui-file *ngIf="rejectedFiles$ | async as file"
+                              state="error"
+                              [file]="file"
+                              (removed)="clearRejected()"></tui-file>
+                </tui-files>
+                <ng-template #content>
+                    <img class="image-preview"
+                         [src]="urlImagePreview" />
+                </ng-template>
+                <tui-error formControlName="file"
+                           [error]="[] | tuiFieldError | async"></tui-error>
+            </div>
+            <div class="tui-form__buttons tui-form__buttons_align_end">
+                <button type="submit"
+                        [disabled]="addForm.invalid"
+                        tuiButton
+                        size="s">
+                    Tạo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

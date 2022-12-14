@@ -1,0 +1,40 @@
+<tui-input [formControl]="search"
+           (keyup.enter)="sendit($event)"
+           tuiTextfieldIconLeft="tuiIconSearchLarge"
+           [tuiTextfieldLabelOutside]="true"
+           [tuiTextfieldCleaner]="true"
+           tuiTextfieldSize="m">
+    Tim kiếm sản phẩm...
+    <tui-data-list *tuiDataList>
+        <a *ngFor="let item of searchResult$ |async"
+           class="item"
+           fxLayout="row"
+           fxLayoutGap="1rem"
+           fxLayoutAlign="start"
+           [routerLink]="['home', item.categories[0].slug, item.slug]"
+           tuiOption>
+            <img class="image-product"
+                 [src]="item.thumbnail.url" />
+            <div class="content"
+                 fxLayout="column">
+                <p class="tui-text_body-m-2">{{item.name}}</p>
+                <div class="price-content">
+                    <div fxLayout="row"
+                         fxLayoutAlign="none center">
+                        <p *ngIf="item.price !== item.payPrice"
+                           class="price">{{item.price | tuiFormatNumber}}
+                            <span class="prefix">đ</span>
+                        </p>
+                        <div *ngIf="item.percent > 0"
+                             class="percent">
+                            -{{item.percent}}%
+                        </div>
+                    </div>
+                    <p class="payPrice">{{item.payPrice | tuiFormatNumber}}
+                        <span class="prefix">đ</span>
+                    </p>
+                </div>
+            </div>
+        </a>
+    </tui-data-list>
+</tui-input>

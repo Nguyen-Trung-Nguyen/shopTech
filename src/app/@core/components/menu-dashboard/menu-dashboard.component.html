@@ -1,0 +1,67 @@
+<div class="nav"
+     fxLayout="row"
+     fxLayoutAlign="space-between center">
+    <div fxLayout="row"
+         fxLayoutAlign="center center"
+         fxLayoutGap="5rem">
+        <a routerLink="">
+            <img class="my-logo"
+                 [src]="logoSvg">
+        </a>
+        <tui-svg class="icon_menu"
+                 src="tuiIconMenuLarge"
+                 (click)="toggle()">
+        </tui-svg>
+    </div>
+    <div *ngIf="isLoggedIn()"
+         fxLayout="column"
+         fxLayoutAlign="center end"
+         fxLayoutGap="0.5rem">
+        <div class="infor-user">
+            <tui-hosted-dropdown *ngIf="isLoggedIn()"
+                                 tuiDropdownHover
+                                 [(open)]="open"
+                                 [content]="dropdown">
+                <button *ngIf="(user$ | async) as user"
+                        tuiButton
+                        iconRight="tuiIconChevronDown"
+                        appearance="outline"
+                        size="s">
+                    <tui-avatar style="margin-right: 1rem; width: 32px; height: 30px;"
+                                [text]="user.fullname"
+                                [avatarUrl]="user.avatar?.url"
+                                size="m"
+                                [autoColor]="true"
+                                [rounded]="true"></tui-avatar>
+                    <p class="tui-text-body-m-2">{{ user.fullname }}</p>
+                </button>
+            </tui-hosted-dropdown>
+            <ng-template #dropdown>
+                <tui-data-list>
+                    <a routerLink="user"
+                       tuiOption>
+                        Taì khoản của tôi
+                    </a>
+                    <a tuiOption>
+                        Đơn mua
+                    </a>
+                    <a *ngIf="isAdmin()"
+                       routerLink="dashboard"
+                       tuiOption>
+                        Dashboard
+                    </a>
+                    <a (click)="logOut()"
+                       tuiOption>
+                        Đăng xuất
+                    </a>
+                </tui-data-list>
+            </ng-template>
+        </div>
+        <div fxLayout="row">
+            <div class="notification"
+                 *ngIf="(user$ | async) && isAdmin()">
+                <app-notification></app-notification>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="wrapper"
+     fxLayout="column"
+     fxLayoutGap="5rem">
+    <div class="header">
+        <div class="banner"
+             ngClass.lt-lg="banner-responsive"
+             *ngIf="banners$ |async as banners">
+            <img class="image"
+                 [src]="banners[0].url" />
+        </div>
+        <div class="carousel"
+             *ngIf="carousels$ |async as carousels">
+            <div tuiCarouselButtons
+                 fxLayout="row"
+                 fxLayoutAlign="center center">
+                <button tuiIconButton
+                        appearance="whiteblock"
+                        icon="tuiIconChevronLeftLarge"
+                        title="Previous"
+                        (click)="carousel.prev()"></button>
+                <tui-carousel [(index)]="index"
+                              [itemsCount]="2"
+                              [duration]="3000"
+                              #carousel>
+                    <ng-container *ngFor="let item of carousels;let i = index;">
+                        <img *tuiItem
+                             class="carousel-item"
+                             [src]="item.url" />
+                    </ng-container>
+                </tui-carousel>
+                <button tuiIconButton
+                        appearance="whiteblock"
+                        icon="tuiIconChevronRightLarge"
+                        title="Next"
+                        (click)="carousel.next()"></button>
+            </div>
+        </div>
+    </div>
+    <div class="phone-content">
+        <ng-container *ngFor="let item of arrayCategory">
+            <app-list-phone [data]="item"></app-list-phone>
+        </ng-container>
+    </div>
+</div>

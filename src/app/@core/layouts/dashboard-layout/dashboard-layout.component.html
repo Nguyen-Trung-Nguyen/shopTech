@@ -1,0 +1,13 @@
+<div class="wrapper">
+    <app-menu-dashboard></app-menu-dashboard>
+    <div class="body">
+        <div>
+            <app-side-bar-dashboard [class.hide_sidebar]="!(expanedSidebar$ | async)"></app-side-bar-dashboard>
+        </div>
+        <div [ngClass]="!(expanedSidebar$ | async) ? 'default' : 'content'">
+            <app-ng-dynamic-breadcrumb bgColor="none"
+                                       fontSize="15px"></app-ng-dynamic-breadcrumb>
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

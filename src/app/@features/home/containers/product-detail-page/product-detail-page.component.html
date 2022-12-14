@@ -1,0 +1,264 @@
+<div class="wrapper">
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <div class="body"
+             fxLayout="column"
+             fxLayoutGap="1rem"
+             *ngIf="productDetail$ | async as item">
+            <div class="product-content"
+                 fxLayout="row wrap"
+                 fxLayoutGap="4rem">
+                <div class="image-list"
+                     fxLayout="column"
+                     fxLayoutGap="2rem"
+                     fxFlex.sm="calc(100% -4rem)"
+                     fxFlex.xs="calc(100% -4rem)"
+                     fxFlex="calc(50% - 4rem)">
+                    <div tuiCarouselButtons
+                         fxFlex="400px"
+                         *ngIf="item.images.length > 0"
+                         fxLayout="row"
+                         fxLayoutAlign="center center">
+                        <button tuiIconButton
+                                appearance="whiteblock"
+                                icon="tuiIconChevronLeftLarge"
+                                title="Previous"
+                                (click)="carousel.prev()"></button>
+                        <tui-carousel [(index)]="index"
+                                      [duration]="4500"
+                                      style="width: 100%;height: 100%;"
+                                      fxLayout="row"
+                                      fxLayoutAlign="center center"
+                                      #carousel>
+                            <ng-container *ngFor="let item of item.images;let i = index;">
+                                <img *tuiItem
+                                     (click)="showPreview(i)"
+                                     class="image"
+                                     [alt]="item.name"
+                                     [src]="item.url" />
+                            </ng-container>
+                        </tui-carousel>
+                        <button tuiIconButton
+                                appearance="whiteblock"
+                                icon="tuiIconChevronRightLarge"
+                                title="Next"
+                                (click)="carousel.next()"></button>
+                    </div>
+                    <div tuiCarouselButtons
+                         *ngIf="listUrlImage.length > 0"
+                         fxLayout="row"
+                         fxLayoutAlign="center center">
+                        <button tuiIconButton
+                                appearance="whiteblock"
+                                size="xs"
+                                icon="tuiIconChevronLeftLarge"
+                                title="Previous"
+                                (click)="carouselPagination.prev()"></button>
+                        <tui-carousel [itemsCount]="5"
+                                      [draggable]="true"
+                                      #carouselPagination>
+                            <ng-container *ngFor="let item of listUrlImage;let i = index;">
+                                <img class="image"
+                                     [class.active_image]="i === index"
+                                     *tuiItem
+                                     (click)="showInCarsouel(i)"
+                                     [alt]="item.name"
+                                     [src]="item.url" />
+                            </ng-container>
+                        </tui-carousel>
+                        <button tuiIconButton
+                                appearance="whiteblock"
+                                size="xs"
+                                icon="tuiIconChevronRightLarge"
+                                title="Next"
+                                (click)="carouselPagination.next()"></button>
+                    </div>
+                    <ng-template #preview
+                                 let-preview>
+                        <tui-preview [rotatable]="true">
+                            <tui-preview-title>{{ title$ | async }}</tui-preview-title>
+                            <tui-preview-pagination [length]="this.listUrlImage.length"
+                                                    [index]="index$$.value"
+                                                    (indexChange)="index$$.next($event)"></tui-preview-pagination>
+                            <img *ngIf="imageSrc$ | async as src"
+                                 class="image"
+                                 [src]="src" />
+                            <button tuiIconButton
+                                    tuiPreviewAction
+                                    icon="tuiIconCloseLarge"
+                                    title="Close"
+                                    (click)="preview.complete()"></button>
+                        </tui-preview>
+                    </ng-template>
+                </div>
+                <div class="product-infor"
+                     fxLayout="column"
+                     fxLayoutGap="1rem"
+                     fxFlex.sm="calc(100% -4rem)"
+                     fxFlex.xs="calc(100% -4rem)"
+                     fxFlex="calc(50% - 4rem)">
+                    <p class="tui-text_h5"> {{item.name}}</p>
+                    <div style="width:92%"
+                         class="price-content">
+                        <div *ngIf="payPrice === 0 && item.minPrice !== item.minPayPrice"
+                             class="tui-text_h6 price">
+                            <p *ngIf="item.minPrice === item.maxPrice; else noSamePrice">
+                                {{item.minPrice | tuiFormatNumber}}
+                                <span class="prefix">đ</span>
+                            </p>
+                        </div>
+                        <ng-template #noSamePrice>
+                            <div class="price tui-text_h6"
+                                 *ngIf="item.minPrice !== item.minPayPrice">
+                                <p>{{item.minPrice | tuiFormatNumber}}
+                                    <span class="prefix">đ</span> -
+                                    {{item.maxPrice
+                                    |tuiFormatNumber}}
+                                    <span class="prefix">đ</span>
+                                </p>
+                            </div>
+                        </ng-template>
+                        <div *ngIf="payPrice === 0"
+                             class="tui-text_h4 payPrice">
+                            <p *ngIf="item.minPayPrice === item.maxPayPrice; else noSamePayPrice">
+                                {{item.minPayPrice | tuiFormatNumber}}
+                                <span class="prefix">đ</span>
+                            </p>
+                        </div>
+                        <ng-template #noSamePayPrice>
+                            <div class="tui-text_h4 payPrice"
+                                 fxLayout="row"
+                                 fxLayoutAlign="space-between center">
+                                <p>{{item.minPayPrice | tuiFormatNumber}}
+                                    <span class="prefix">đ</span>-
+                                    {{item.maxPayPrice
+                                    |tuiFormatNumber}}
+                                    <span class="prefix">đ</span>
+                                </p>
+                                <div *ngIf="item.percent > 0"
+                                     class="percent">
+                                    {{item.percent}}% GIẢM
+                                </div>
+                            </div>
+                        </ng-template>
+                        <div fxLayout="row"
+                             fxLayoutGap="1rem"
+                             *ngIf="payPrice > 0 && price > 0"
+                             fxLayoutAlign="none center">
+                            <div *ngIf="price !== payPrice"
+                                 class="tui-text_h6 price">
+                                <p>
+                                    {{price | tuiFormatNumber}}
+                                    <span class="prefix">đ</span>
+                                </p>
+                            </div>
+                            <div>
+                                <p class="tui-text_h4 payPrice">
+                                    {{payPrice | tuiFormatNumber}}
+                                    <span class="prefix">đ</span>
+                                </p>
+                            </div>
+                            <div *ngIf="percent > 0"
+                                 class="percent">
+                                {{percent}}% GIẢM
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="item.colors.length > 0"
+                         class="variant-color"
+                         fxLayout="column"
+                         fxLayoutGap="1rem">
+                        <div class="label tui-text_body-m">
+                            Màu sắc: {{colorSelected.name}}
+                        </div>
+                        <div class="item"
+                             fxLayout="row"
+                             fxLayoutGap="1rem">
+                            <ng-container *ngFor="let item of item.colors">
+                                <tui-radio-block [(ngModel)]="colorSelected"
+                                                 (change)="onItemChange()"
+                                                 [hideRadio]="true"
+                                                 [item]="item"
+                                                 size="m">
+                                    <div class="circle"
+                                         [style.background-color]="item.hex">
+                                    </div>
+                                </tui-radio-block>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div *ngIf="item.capacities.length > 0"
+                         class="variant-capacities"
+                         fxLayout="column"
+                         fxLayoutGap="1rem">
+                        <div class="label tui-text_body-m">
+                            Dung lượng: {{capacitySelected.name}}
+                        </div>
+                        <div class="item"
+                             fxLayout="row"
+                             fxLayoutGap="1rem">
+                            <ng-container *ngFor="let item of item.capacities">
+                                <tui-radio-block [(ngModel)]="capacitySelected"
+                                                 (change)="onItemChange()"
+                                                 [hideRadio]="true"
+                                                 [item]="item"
+                                                 size="m">
+                                    {{item.name}}
+                                </tui-radio-block>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="quantity"
+                         fxLayout="column"
+                         fxLayoutGap="1rem">
+                        <div class="label tui-text_body-m">
+                            Số lượng
+                        </div>
+                        <div fxLayout="row"
+                             fxLayoutAlign="none center"
+                             fxLayoutGap="4rem">
+                            <div fxFlex="25%">
+                                <tui-input-count style="width: 100%;"
+                                                 [(ngModel)]="quantity"
+                                                 (ngModelChange)="onItemChange()"
+                                                 [min]="1"
+                                                 [max]="1000"
+                                                 [tuiTextfieldLabelOutside]="true"></tui-input-count>
+                            </div>
+                            <div class="label tui-text_body-m">
+                                <p *ngIf="stock > 0"> {{stock}} sản phẩm có sắn</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="out-of-stock"
+                         *ngIf="outOfStockMessage">
+                        <p class="message">{{outOfStockMessage}}</p>
+                    </div>
+                    <div class="action">
+                        <button tuiButton
+                                (click)="addCart()"
+                                [disabled]="disableButton"
+                                appearance="secondary-destructive">
+                            <div fxLayout="row"
+                                 fxLayoutAlign="center center"
+                                 fxLayoutGap="1rem">
+                                <img class="icon"
+                                     [src]="cartSvg" />
+                                <p> Thêm vào giỏ hàng</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-description">
+                <tui-editor-socket class="socket"
+                                   (imagePreview)="previewSocket.showImage($event)"
+                                   [content]="item.description">
+                    <app-image-preview-example #previewSocket>
+                    </app-image-preview-example>
+                </tui-editor-socket>
+            </div>
+        </div>
+    </tui-loader>
+</div>

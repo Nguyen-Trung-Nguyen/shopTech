@@ -1,0 +1,117 @@
+<div class="wrapper">
+    <div class="header"
+         fxLayout="row"
+         fxLayoutAlign="space-between">
+        <p class="tui-text_h5"> {{popupTitle()}}</p>
+        <button tuiIconButton
+                appearance="accent"
+                size="s"
+                icon="tuiIconPlusLarge"
+                shape="rounded"
+                (click)="showAddForm()"></button>
+    </div>
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <div class="body"
+             *ngIf="(categories$ | async) as data;"
+             fxLayout="column"
+             fxLayoutGap="1rem">
+            <div>
+                <tui-expand [expanded]="expandedAddform$ | async">
+                    <ng-template tuiExpandContent>
+                        <app-add-form-category></app-add-form-category>
+                    </ng-template>
+                </tui-expand>
+            </div>
+            <div class="tui-form__row">
+                <div fxLayout="row"
+                     class="tui-form__header tui-form__header_margin-top_none"
+                     fxLayoutGap="0.5rem">
+                    <span class="active">*</span>
+                    <p class="tui-text_body-l-2">Lọc theo</p>
+                </div>
+                <tui-select [formControl]="filter"
+                            tuiTextfieldSize="m"
+                            [valueContent]="itemContent"
+                            [tuiTextfieldLabelOutside]="true">
+                    <tui-data-list-wrapper *tuiDataList
+                                           [itemContent]="itemContent"
+                                           [items]="optionFilter"></tui-data-list-wrapper>
+                </tui-select>
+                <ng-template #itemContent
+                             let-item>
+                    <p> {{item.name}}</p>
+                </ng-template>
+            </div>
+            <table tuiTable>
+                <thead>
+                    <tr>
+                        <th tuiTh>STT</th>
+                        <th tuiTh>
+                            Hình ảnh
+                        </th>
+                        <th tuiTh>
+                            Tên
+                        </th>
+                        <th tuiTh>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of data; let index = index">
+                        <td tuiTd>{{ index + 1 }}</td>
+                        <td tuiTd
+                            style="text-align: center;">
+                            <img class="icon"
+                                 [src]="item.image.url" />
+                        </td>
+                        <td tuiTd>
+                            {{ item.name }}
+                        </td>
+                        <td tuiTd>
+                            <div class="remove">
+                                <button tuiIconButton
+                                        appearance="flat"
+                                        size="s"
+                                        icon="tuiIconTrash"
+                                        title="Xóa"
+                                        (click)="showTableBar(item.id)"
+                                        shape="rounded"></button>
+                                <button tuiIconButton
+                                        appearance="flat"
+                                        size="s"
+                                        icon="tuiIconEdit"
+                                        title="Chỉnh sửa"
+                                        (click)="goToEditPage(item.id)"
+                                        shape="rounded"></button>
+                                <ng-template #tableBarTemplate
+                                             let-close>
+                                    <div tuiMode="onDark"
+                                         fxLayout="row"
+                                         fxLayoutGap="2rem">
+                                        <p>Bạn có chắc rằng muốn xóa không ?</p>
+                                        <button tuiButton
+                                                type="button"
+                                                (click)="remove()"
+                                                size="m">
+                                            Đồng ý
+                                        </button>
+                                        <button tuiButton
+                                                type="button"
+                                                appearance="outline"
+                                                (click)="close()"
+                                                size="m">
+                                            Hủy bỏ
+                                        </button>
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </tui-loader>
+</div>

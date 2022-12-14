@@ -1,0 +1,98 @@
+<div class="wrapper">
+    <div class="body">
+        <form [formGroup]="informationForm"
+              fxLayout="column"
+              fxLayoutGap="1rem"
+              (submit)="updateInformation()">
+            <div fxLayout="row"
+                 fxLayoutGap="1rem">
+                <div fxFlex=50>
+                    <tui-input formControlName="fullName"
+                               tuiTextfieldSize="m">
+                        Họ và tên:
+                    </tui-input>
+                    <tui-error formControlName="fullName"
+                               [error]="[] | tuiFieldError | async"></tui-error>
+                </div>
+                <div fxFlex="50">
+                    <tui-input-phone [countryCode]="''"
+                                     [phoneMaskAfterCountryCode]="'#### #### ##'"
+                                     tuiTextfieldSize="m"
+                                     formControlName="phoneNumber">
+                        Số điện thoại:
+                    </tui-input-phone>
+                    <tui-error formControlName="phoneNumber"
+                               [error]="[] | tuiFieldError | async"></tui-error>
+                </div>
+            </div>
+            <div fxLayout="row"
+                 fxLayoutGap="1rem">
+                <div fxFlex="50">
+                    <tui-combo-box formControlName="province"
+                                   tuiDropdownDirection="bottom"
+                                   [stringify]="stringify"
+                                   tuiTextfieldSize="m">
+                        Tỉnh/Thành phố
+                        <tui-data-list *tuiDataList>
+                            <button *ngFor="let item of provinces$ | async | tuiFilterByInputWith: stringify "
+                                    tuiOption
+                                    [value]="item">
+                                {{ item.province_name }}
+                            </button>
+                        </tui-data-list>
+                    </tui-combo-box>
+                </div>
+                <div fxFlex="50">
+                    <tui-combo-box formControlName="district"
+                                   tuiDropdownDirection="bottom"
+                                   [stringify]="stringify"
+                                   tuiTextfieldSize="m">
+                        Quận/Huyện
+                        <tui-data-list *tuiDataList>
+                            <button *ngFor="let item of districts$ | async | tuiFilterByInputWith: stringify "
+                                    tuiOption
+                                    [value]="item">
+                                {{ item.name }}
+                            </button>
+                        </tui-data-list>
+                    </tui-combo-box>
+                </div>
+            </div>
+            <div fxLayout="row"
+                 fxLayoutGap="1rem">
+                <div fxFlex="50">
+                    <tui-combo-box formControlName="ward"
+                                   tuiDropdownDirection="bottom"
+                                   [stringify]="stringify"
+                                   tuiTextfieldSize="m">
+                        Phường/Xã
+                        <tui-data-list *tuiDataList>
+                            <button *ngFor="let item of wards$ | async | tuiFilterByInputWith: stringify "
+                                    tuiOption
+                                    [value]="item">
+                                {{ item.name }}
+                            </button>
+                        </tui-data-list>
+                    </tui-combo-box>
+                </div>
+                <div fxFlex="50">
+                    <tui-input formControlName="detailAddress"
+                               tuiTextfieldSize="m">
+                        Số nhà/Tên đường
+                    </tui-input>
+                    <tui-error formControlName="detailAddress"
+                               [error]="[] | tuiFieldError | async"></tui-error>
+                </div>
+            </div>
+            <div fxLayout="row"
+                 fxLayoutAlign="end end">
+                <button type="submit"
+                        [disabled]="informationForm.invalid"
+                        tuiButton
+                        size="s">
+                    Thêm
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

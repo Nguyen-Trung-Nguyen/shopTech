@@ -1,0 +1,66 @@
+<div class="wrapper">
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <div class="list-product"
+             fxLayout="row wrap"
+             *ngIf="(products$ | async)?.length > 0;else notfound">
+            <a class="product-item"
+               *ngFor="let item of products$ | async"
+               fxFlex="20%"
+               [routerLink]="['/home', item.categories[0].slug, item.slug]">
+                <div class="header">
+                    <img class="thumbnail"
+                         [src]="item.thumbnail.url" />
+                    <img *ngIf="item.isNew"
+                         class="isNew"
+                         src="/assets/image/label-is-new.png">
+                </div>
+                <div class="content"
+                     fxLayout="column">
+                    <div class="title-content">
+                        <p class="tui-text_body-m-2">{{item.name}}</p>
+                    </div>
+                    <div class="price-content">
+                        <div fxLayout="row"
+                             fxLayoutAlign="space-between center">
+                            <p *ngIf="item.price !== item.payPrice"
+                               class="price">{{item.price | tuiFormatNumber}}
+                                <span class="prefix">đ</span>
+                            </p>
+                            <div *ngIf="item.percent > 0"
+                                 class="percent">
+                                -{{item.percent}}%
+                            </div>
+                        </div>
+                        <p class="payPrice">{{item.payPrice | tuiFormatNumber}}
+                            <span class="prefix">đ</span>
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <ng-template #notfound>
+            <div class="not-found"
+                 fxLayout="column"
+                 fxLayoutGap="1rem">
+                <div class="title">
+                    <p class="tui-text_body-m">Rất tiếc, chúng tôi không tìm thấy kết quả nào phù hợp với từ khóa
+                        <span class="error-keyword">
+                            "{{keyword }}"
+                        </span>
+                    </p>
+                </div>
+                <div class="message"
+                     fxLayout="column"
+                     fxLayoutGap="0.3rem">
+                    <p class="tui-text_h6">Để tìm được kết quả chính xác hơn, bạn vui lòng:</p>
+                    <p class="tui-text_body-m">- Kiểm tra lỗi chính tả của từ khóa đã nhập</p>
+                    <p class="tui-text_body-m">- Thử lại bằng từ khóa khác</p>
+                    <p class="tui-text_body-m">- Thử lại bằng những từ khóa tổng quát hơn</p>
+                    <p class="tui-text_body-m">- Thử lại bằng những từ khóa ngắn gọn hơn</p>
+                </div>
+            </div>
+        </ng-template>
+    </tui-loader>
+</div>

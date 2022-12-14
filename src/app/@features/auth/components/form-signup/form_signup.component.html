@@ -1,0 +1,60 @@
+<div class="wrapper">
+    <h1 class="tui-text_h5 tui-space_top-8 tui-space_bottom-4">Đăng ký tài khoản</h1>
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <form fxLayout="column"
+              fxLayoutGap="0.5rem"
+              [formGroup]="regisForm"
+              (ngSubmit)="onSubmit()">
+            <tui-input formControlName="fullname"
+                       [tuiTextfieldCleaner]="true"
+                       [tuiTextfieldCustomContent]="regisForm.controls.fullname.valid ? success : ''"
+                       tuiTextfieldSize="m"> Họ và tên
+            </tui-input>
+            <tui-error formControlName="fullname"
+                       [error]="[] | tuiFieldError | async"></tui-error>
+            <tui-input formControlName="email"
+                       tuiTextfieldExampleText="mail@mail.ru"
+                       tuiHintContent="Phải đúng định dạng email VD: abc123@gmail.com"
+                       tuiHintDirection="right"
+                       [tuiTextfieldCleaner]="true"
+                       [tuiTextfieldCustomContent]="regisForm.controls.email.valid ? success : ''"
+                       tuiTextfieldSize="m">Địa chỉ email
+            </tui-input>
+            <tui-error formControlName="email"
+                       [error]="[] | tuiFieldError | async"></tui-error>
+            <tui-input-password formControlName="password"
+                                tuiTextfieldSize="m"
+                                [tuiTextfieldCustomContent]="regisForm.controls.password.valid ? success : ''"
+                                [tuiTextfieldCleaner]="true">
+                Mật khẩu
+            </tui-input-password>
+            <tui-error formControlName="password"
+                       [error]="[] | tuiFieldError | async"></tui-error>
+            <tui-input-password formControlName="confirmPassword"
+                                tuiTextfieldSize="m"
+                                [tuiTextfieldCustomContent]="regisForm.controls.confirmPassword.valid ? success : ''"
+                                [tuiTextfieldCleaner]="true">
+                Xác nhận mật khẩu
+            </tui-input-password>
+            <tui-error formControlName="confirmPassword"
+                       [error]="[] | tuiFieldError | async"></tui-error>
+            <ng-template #messsage>
+                <p class="success">{{(messageResponse$ | async)?.message}}</p>
+            </ng-template>
+            <p *ngIf="(error$ | async); else messsage"
+               class="error">{{(error$ | async)?.message}}</p>
+            <button type="submit"
+                    tuiButton
+                    [disabled]="!regisForm.valid"
+                    size="s">
+                Đăng ký
+            </button>
+        </form>
+    </tui-loader>
+    <ng-template #success>
+        <tui-svg src="tuiIconCheckLarge"
+                 class="success tui-space_left-3"></tui-svg>
+    </ng-template>
+</div>

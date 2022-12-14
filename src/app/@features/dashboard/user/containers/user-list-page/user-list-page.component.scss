@@ -1,0 +1,38 @@
+.wrapper {
+	width: 100%;
+	height: 100vh;
+	padding: 1rem 1rem;
+}
+.header {
+	padding-bottom: 2rem;
+}
+.body {
+	padding: 2rem 2rem;
+	background-color: #ffffff;
+}
+.context-menu {
+	width: 8rem;
+}
+.success {
+	background-color: var(--tui-support-03);
+	color: black;
+}
+.Admin {
+	background-color: var(--tui-support-12);
+	color: black;
+	margin-left: 0.5rem;
+}
+.User {
+	background-color: var(--tui-support-05);
+	color: black;
+	margin-left: 0.5rem;
+}
+td {
+	height: 2rem;
+	padding: 1rem 0.5rem;
+	text-align: start;
+}
+tr:hover td {
+	transition: 0.5s ease-out;
+	background: var(--tui-base-02);
+}

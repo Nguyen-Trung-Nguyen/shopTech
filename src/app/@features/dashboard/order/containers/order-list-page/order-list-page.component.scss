@@ -1,0 +1,54 @@
+.wrapper {
+	width: 100%;
+	height: 100vh;
+	padding: 1rem 1rem;
+}
+.header {
+	padding-bottom: 2rem;
+}
+.body {
+	padding: 2rem 2rem;
+	background-color: #ffffff;
+}
+.context-menu {
+	width: 8rem;
+}
+.prefix {
+	position: relative;
+	left: -0.3em;
+	vertical-align: super;
+	padding-bottom: 0.38em;
+	background: #fff;
+	font-size: 0.76em;
+}
+.payPrice {
+	color: var(--tui-negative);
+}
+td {
+	height: 2rem;
+	padding: 1rem 0.5rem;
+	text-align: start;
+}
+tr:hover td {
+	transition: 0.5s ease-out;
+	background: var(--tui-base-02);
+}
+.PENDING {
+	background-color: var(--tui-base-04);
+}
+.CONFIRMED {
+	background-color: var(--tui-warning-bg);
+}
+.SHIPPING {
+	background-color: var(--tui-error-bg-hover);
+}
+.COMPLETED {
+	background-color: var(--tui-success-bg-hover);
+}
+.CANCELLED {
+	background-color: var(--tui-base-04);
+}
+
+.REFUND {
+	background-color: var(--tui-warning-bg-hover);
+}

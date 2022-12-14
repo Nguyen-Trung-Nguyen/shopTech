@@ -1,0 +1,88 @@
+<div class="wrapper">
+    <div class="body">
+        <form [formGroup]="addForm"
+              *ngIf="parentCategories$ | async as rootCategories"
+              (submit)="create()">
+            <div fxLayout="row"
+                 class="tui-form__header tui-form__header_margin-top_none"
+                 fxLayoutGap="0.5rem">
+                <span class="active">*</span>
+                <p class="tui-text_body-l-2">Tên danh mục</p>
+            </div>
+            <div class="tui-form__row">
+                <tui-input formControlName="name"
+                           [tuiTextfieldLabelOutside]="true"
+                           [tuiTextfieldCleaner]="true"
+                           tuiTextfieldSize="m">
+                    Nhập tên danh mục
+                </tui-input>
+                <tui-error formControlName="name"
+                           [error]="[] | tuiFieldError | async"></tui-error>
+            </div>
+            <div fxLayout="row"
+                 class="tui-form__header"
+                 fxLayoutGap="0.5rem">
+                <p class="tui-text_body-l-2">Danh mục cha</p>
+                <tui-badge status="error"
+                           value="Không bắt buộc"></tui-badge>
+            </div>
+            <div class="tui-form__row">
+                <tui-select formControlName="parent"
+                            tuiTextfieldSize="m"
+                            [tuiTextfieldLabelOutside]="true"
+                            [valueContent]="itemContent">
+                    Chọn danh mục cha
+                    <tui-data-list-wrapper *tuiDataList
+                                           [itemContent]="itemContent"
+                                           [items]="rootCategories"></tui-data-list-wrapper>
+                </tui-select>
+                <ng-template #itemContent
+                             let-item>
+                    <div fxLayout="row"
+                         fxLayoutGap="1rem">
+                        <img class="icon"
+                             [src]="item.image?.url" />
+                        <p> {{item.name}}</p>
+                    </div>
+                </ng-template>
+            </div>
+            <div fxLayout="row"
+                 class="tui-form__header"
+                 fxLayoutGap="0.5rem">
+                <span class="active">*</span>
+                <p class="tui-text_body-l-2">Hình ảnh</p>
+            </div>
+            <div class="tui-form__row">
+                <tui-input-files accept="image/*"
+                                 *ngIf="!addForm.value.file"
+                                 (reject)="onReject($event)"
+                                 formControlName="file"
+                                 tuiTextfieldSize="m"></tui-input-files>
+                <tui-files class="tui-space_top-1">
+                    <tui-file *ngIf="addForm.get('file').valueChanges| async as file"
+                              [file]="file"
+                              [leftContent]="content"
+                              (removed)="removeFile()"></tui-file>
+                    <tui-file *ngIf="rejectedFiles$ | async as file"
+                              state="error"
+                              [file]="file"
+                              (removed)="clearRejected()"></tui-file>
+                </tui-files>
+                <ng-template #content>
+                    <img class="image-preview"
+                         [src]="urlImagePreview" />
+                </ng-template>
+                <tui-error formControlName="file"
+                           [error]="[] | tuiFieldError | async"></tui-error>
+            </div>
+            <div class="tui-form__buttons tui-form__buttons_align_end">
+                <button type="submit"
+                        [disabled]="addForm.invalid"
+                        tuiButton
+                        size="s">
+                    Tạo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

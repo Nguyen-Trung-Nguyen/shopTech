@@ -1,0 +1,17 @@
+<div class="wrapper">
+    <div class="no-cart"
+         fxLayout="column"
+         fxLayoutGap="1rem"
+         fxLayoutAlign="none center">
+        <img class="image"
+             [src]="successCheckoutUrl" />
+        <p class="tui-text_body-l-2">Đặt hàng thành công</p>
+        <p class="tui-text_body-l-2">Thank you for your order!</p>
+        <a tuiButton
+           appearance="custom"
+           [routerLink]="['/']"
+           size="s">
+            Tiếp tục mua sắm
+        </a>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+@import '~@taiga-ui/core/styles/taiga-ui-theme';
+@import '~@taiga-ui/core/styles/taiga-ui-fonts';
+@import '~@taiga-ui/styles/taiga-ui-global';
+@import '@taiga-ui/core/styles/taiga-ui-local.less';
+// This goes into global, unencapsulated styles
+[tuiWrapper][data-appearance='custom'] {
+    background: #bc71c9;
+    color: #fff;
+
+    .wrapper-hover({
+        background: #a381ff;
+    });
+
+    .wrapper-active({
+        background: #8f75d1;
+    });
+
+    .wrapper-disabled({
+        background: #eaecee;
+    });
+}

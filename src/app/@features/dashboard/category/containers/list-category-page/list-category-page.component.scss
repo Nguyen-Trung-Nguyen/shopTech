@@ -1,0 +1,34 @@
+.wrapper {
+	width: 100%;
+	height: 100vh;
+	padding: 2rem 2rem;
+}
+.body {
+	padding: 2rem 2rem;
+	background-color: #ffffff;
+}
+
+.icon {
+	width: 2rem;
+	height: 2rem;
+}
+
+.header {
+	padding: 1rem 1rem;
+}
+
+tr:nth-child(even) td {
+	background: var(--tui-base-02);
+}
+
+.remove {
+	opacity: 0;
+	tr:hover &,
+	tr:focus-within & {
+		opacity: 1;
+	}
+}
+.table {
+	width: 100%;
+	height: 100%;
+}

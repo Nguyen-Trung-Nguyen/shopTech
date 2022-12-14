@@ -1,0 +1,63 @@
+<div class="wrapper">
+    <div class="banner">
+        <img class="image"
+             *ngIf="banner$ | async as banner"
+             [src]="banner[0].url" />
+    </div>
+    <div class="list-product"
+         tuiCarouselButtons
+         *ngIf="phones$ | async as phones"
+         fxLayout="row"
+         fxLayoutAlign="center center">
+        <button tuiIconButton
+                appearance="whiteblock"
+                icon="tuiIconChevronLeftLarge"
+                title="Previous"
+                (click)="carousel.prev()"></button>
+        <tui-carousel [itemsCount]="4"
+                      [duration]="3000"
+                      #carousel>
+            <ng-container *ngFor="let item of phones">
+                <a class="product-item"
+                   *tuiItem
+                   fxFlex="100"
+                   [routerLink]="['home', item.categories[0].slug, item.slug]">
+                    <div class="header">
+                        <img class="thumbnail"
+                             [src]="item.thumbnail.url" />
+                        <img *ngIf="item.isNew"
+                             class="isNew"
+                             src="/assets/image/label-is-new.png">
+                    </div>
+                    <div class="content"
+                         fxLayout="column">
+                        <div class="title-content">
+                            <p class="tui-text_body-m-2">{{item.name | truncate:40}}</p>
+                        </div>
+                        <div class="price-content">
+                            <div fxLayout="row"
+                                 fxLayoutAlign="space-between center">
+                                <p *ngIf="item.price !== item.payPrice"
+                                   class="price">{{item.price | tuiFormatNumber}}
+                                    <span class="prefix">đ</span>
+                                </p>
+                                <div *ngIf="item.percent > 0"
+                                     class="percent">
+                                    -{{item.percent}}%
+                                </div>
+                            </div>
+                            <p class="payPrice">{{item.payPrice | tuiFormatNumber}}
+                                <span class="prefix">đ</span>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </ng-container>
+        </tui-carousel>
+        <button tuiIconButton
+                appearance="whiteblock"
+                icon="tuiIconChevronRightLarge"
+                title="Next"
+                (click)="carousel.next()"></button>
+    </div>
+</div>

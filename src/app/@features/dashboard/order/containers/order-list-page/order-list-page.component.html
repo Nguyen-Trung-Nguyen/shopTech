@@ -1,0 +1,111 @@
+<div class="wrapper">
+    <div class="header"
+         fxLayout="row"
+         fxLayoutAlign="space-between">
+        <p class="tui-text_h5"> Danh sách đơn đặt</p>
+    </div>
+    <div class="body"
+         fxLayout="column"
+         fxLayoutGap="3rem">
+        <app-filter-order></app-filter-order>
+        <tui-loader [showLoader]="loading$ | async"
+                    [inheritColor]="true"
+                    [overlay]="true">
+            <div *ngIf="(orders$ | async) as orders;">
+                <p style="margin-bottom: 1rem;"
+                   class="tui-text_body-m">Tổng cộng có: {{orders.length}} đơn </p>
+                <table tuiTable
+                       style="width:100%; height: 100%">
+                    <thead>
+                        <tr>
+                            <th tuiTh>STT</th>
+                            <th tuiTh>
+                                Tên người nhận
+                            </th>
+                            <th tuiTh>
+                                Email
+                            </th>
+                            <th tuiTh>
+                                Số điện thoại
+                            </th>
+                            <th tuiTh>
+                                Tổng tiền
+                            </th>
+                            <th tuiTh>
+                                Trạng thái
+                            </th>
+                            <th tuiTh>
+                                Ngày đặt
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of orders; let index = index"
+                            #dropdown="tuiDropdown"
+                            tuiDropdownContext
+                            [tuiDropdown]="contextMenu">
+                            <ng-template #contextMenu>
+                                <tui-data-list role="menu"
+                                               tuiDataListDropdownManager
+                                               class="context-menu">
+                                    <button *ngFor="let menu of menuItems"
+                                            tuiOption
+                                            (click)="printToConsole(menu.title, item); dropdown.toggle(false)">
+                                        {{ menu.title }}
+                                        <tui-svg class="icon"
+                                                 [src]="menu.iconName"></tui-svg>
+                                    </button>
+                                </tui-data-list>
+                            </ng-template>
+                            <td tuiTd>{{ index + 1 }}</td>
+                            <td tuiTd>
+                                {{item.fullName}}
+                            </td>
+                            <td tuiTd>
+                                {{item.email}}
+                            </td>
+                            <td tuiTd>
+                                {{item.phoneNumber}}
+                            </td>
+                            <td tuiTd>
+                                {{item.totalPrice | tuiFormatNumber}}
+                                <span class="prefix">đ</span>
+                            </td>
+                            <td tuiTd>
+                                <tui-tag size="s"
+                                         status="custom"
+                                         [class]="item.status"
+                                         [hoverable]="true"
+                                         [value]="translateStatus(item.status)"></tui-tag>
+                            </td>
+                            <td tuiTd>
+                                {{ item.orderDate | date: 'M/d/yy, h:mm a' }}
+                            </td>
+                            <ng-template #tableBarTemplate
+                                         let-close>
+                                <div tuiMode="onDark"
+                                     fxLayout="row"
+                                     fxLayoutGap="2rem">
+                                    <p>Bạn có chắc rằng muốn xóa không ?</p>
+                                    <button tuiButton
+                                            type="button"
+                                            (click)="remove()"
+                                            size="m">
+                                        Đồng ý
+                                    </button>
+                                    <button tuiButton
+                                            type="button"
+                                            appearance="outline"
+                                            (click)="close()"
+                                            size="m">
+                                        Hủy bỏ
+                                    </button>
+                                </div>
+                            </ng-template>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </tui-loader>
+    </div>
+</div>

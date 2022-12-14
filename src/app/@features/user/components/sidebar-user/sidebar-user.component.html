@@ -1,0 +1,51 @@
+<div class="wrapper"
+     fxLayout="column"
+     fxLayoutGap="0.5rem">
+    <div class="information"
+         *ngIf="(user$ | async) as user"
+         fxLayout="row"
+         fxLayoutGap="1rem"
+         fxLayoutAlign="none center">
+        <tui-avatar [text]="user.fullname"
+                    [avatarUrl]="user.avatar?.url"
+                    size="m"
+                    [autoColor]="true"
+                    [rounded]="true"></tui-avatar>
+        <h1 class="tui-text_h6"
+            style="font-size: 13px;">{{ user.fullname }}</h1>
+    </div>
+    <tui-accordion>
+        <tui-accordion-item size="s"
+                            [noPadding]="true"
+                            [open]="true"
+                            [borders]="null">
+            <a routerLink="/user/profile">
+                <span>
+                    <tui-svg src="tuiIconUser"></tui-svg>
+                    Tài khoản của tôi
+                </span>
+            </a>
+            <ng-template tuiAccordionItemContent>
+                <div fxLayout="column"
+                     fxLayoutGap="1rem">
+                    <ng-container *ngFor="let item of items">
+                        <a [routerLink]="item.link">
+                            <p class="tui-text_body-m"
+                               routerLinkActive="active">{{item.name}}</p>
+                        </a>
+                    </ng-container>
+                </div>
+            </ng-template>
+        </tui-accordion-item>
+    </tui-accordion>
+    <tui-data-list>
+        <a tuiOption
+           fxLayout="row"
+           fxLayoutGap="1rem"
+           fxLayoutAlign="start">
+            <tui-svg src="tuiIconDraft"></tui-svg>
+            <p class="tui-text_body-m"
+               routerLinkActive="active">Đơn mua</p>
+        </a>
+    </tui-data-list>
+</div>

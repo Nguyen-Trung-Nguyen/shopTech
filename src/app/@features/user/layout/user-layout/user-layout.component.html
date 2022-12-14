@@ -1,0 +1,18 @@
+<div class="wrapper">
+    <div class="body"
+         fxLayout="row wrap"
+         fxLayoutGap="2rem"
+         fxLayoutAlign="center">
+        <div class="left-content"
+             [ngClass.lt-md]="'left-content-responsive'"
+             fxFlex.lt-md="100"
+             fxFlex="calc(20% - 2rem)">
+            <app-sidebar-user></app-sidebar-user>
+        </div>
+        <div class="right-content"
+             fxFlex.lt-md="100"
+             fxFlex="calc(80% - 2rem)">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

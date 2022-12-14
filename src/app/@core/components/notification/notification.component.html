@@ -1,0 +1,70 @@
+<span (tuiActiveZoneChange)="onActiveZone($event)">
+    <div class="badge-notification"
+         tuiDropdownLimitWidth="auto"
+         [tuiDropdown]="notificationContent"
+         [tuiDropdownManual]="isShowNotifi"
+         (click)="showNotification()">
+        <tui-badge class="badge"
+                   *ngIf="(user$|async).totalNoti > 0"
+                   status="primary"
+                   size="s"
+                   [value]="(user$|async).totalNoti"></tui-badge>
+        <button tuiIconButton
+                title="Thông báo"
+                appearance="outline"
+                size="m"
+                icon="tuiIconBellLarge">
+        </button>
+    </div>
+    <ng-template #notificationContent>
+        <div class="notification-content">
+            <div class="notification-header"
+                 fxLayout="row"
+                 fxLayoutAlign="space-between center">
+                <p class="tui-text_body-l">Thông báo</p>
+                <tui-select fxFlex=40
+                            [formControl]="filter"
+                            [tuiTextfieldLabelOutside]="true"
+                            tuiTextfieldSize="s"
+                            [valueContent]="filterContent">
+                    <tui-data-list-wrapper *tuiDataList
+                                           [items]="filterArray"
+                                           [itemContent]="filterContent"></tui-data-list-wrapper>
+                    <ng-template #filterContent
+                                 let-item>
+                        <p>{{item.name}}</p>
+                    </ng-template>
+                </tui-select>
+            </div>
+            <tui-data-list *ngIf="notifications$ | async as notifications">
+                <a *ngFor="let item of notifications"
+                   (click)="onItemNotification(item)"
+                   [routerLink]="['/dashboard/order', item.url]"
+                   fxLayout="row"
+                   fxLayoutAlign="space-between center"
+                   tuiOption>
+                    <div class="notification-description">
+                        <p>{{item.description}}</p>
+                        <p class="tui-text_body-s gray">{{ item.createdAt | date: 'M/d/yy, h:mm a' }}
+                        </p>
+                    </div>
+                    <div fxLayout="row"
+                         fxLayoutGap="0.5rem"
+                         fxLayoutAlign="center center">
+                        <button class="remove"
+                                *ngIf="item.isRead"
+                                tuiIconButton
+                                (click)="onDelete($event, item.id);"
+                                size="xs"
+                                title="Xóa"
+                                appearance="mono"
+                                icon="tuiIconTrash">
+                        </button>
+                        <div class="unRead"
+                             *ngIf="!item.isRead"></div>
+                    </div>
+                </a>
+            </tui-data-list>
+        </div>
+    </ng-template>
+</span>

@@ -1,0 +1,142 @@
+<div class="wrapper">
+    <div class="header">
+        <p class="tui-text_body-m">Quản lý địa chỉ</p>
+    </div>
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <div class="body"
+             *ngIf="(user$ | async) as user; "
+             fxLayout="row wrap"
+             fxLayoutAlign="center"
+             fxLayoutGap="2rem">
+            <div class="infor-user"
+                 fxFlex="calc(60% - 32px)"
+                 fxFlex.lt-md="100">
+                <form [formGroup]="informationForm"
+                      (submit)="updateInformation()">
+                    <div fxLayout="row"
+                         class="tui-form__header tui-form__header_margin-top_none"
+                         fxLayoutGap="0.5rem">
+                        <p class="tui-text_body-l-2">Họ và tên: </p>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-input formControlName="fullname"
+                                   [tuiTextfieldLabelOutside]="true"
+                                   tuiTextfieldSize="m">
+                        </tui-input>
+                        <tui-error formControlName="fullname"
+                                   [error]="[] | tuiFieldError | async"></tui-error>
+                    </div>
+                    <div fxLayout="row"
+                         class="tui-form__header"
+                         fxLayoutGap="0.5rem">
+                        <p class="tui-text_body-l-2">Email: </p>
+                    </div>
+                    <div class="tui-form__row">
+                        <p> {{ user.email }} </p>
+                    </div>
+                    <div fxLayout="row"
+                         class="tui-form__header"
+                         fxLayoutGap="0.5rem">
+                        <p class="tui-text_body-l-2">Số điện thoại: </p>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-input-phone [countryCode]="''"
+                                         [phoneMaskAfterCountryCode]="'#### #### ##'"
+                                         [tuiTextfieldLabelOutside]="true"
+                                         tuiTextfieldSize="m"
+                                         formControlName="phonenumber">
+                        </tui-input-phone>
+                    </div>
+                    <div fxLayout="row"
+                         class="tui-form__header"
+                         fxLayoutGap="0.5rem">
+                        <p class="tui-text_body-l-2">Giới tính: </p>
+                    </div>
+                    <div class="tui-form__row tui-form__row_multi-fields">
+                        <div class="tui-form__multi-field">
+                            <tui-radio-labeled formControlName="gender"
+                                               [item]="items[0]"
+                                               class="tui-space_bottom-3">
+                                Nam
+                            </tui-radio-labeled>
+                        </div>
+                        <div class="tui-form__multi-field">
+                            <tui-radio-labeled formControlName="gender"
+                                               [item]="items[1]"
+                                               class="tui-space_bottom-3">
+                                Nữ
+                            </tui-radio-labeled>
+                        </div>
+                        <div class="tui-form__multi-field">
+                            <tui-radio-labeled formControlName="gender"
+                                               [item]="items[2]"
+                                               class="tui-space_bottom-3">
+                                Khác
+                            </tui-radio-labeled>
+                        </div>
+                    </div>
+                    <div fxLayout="row"
+                         class="tui-form__header"
+                         fxLayoutGap="0.5rem">
+                        <p class="tui-text_body-l-2">Giới tính: </p>
+                    </div>
+                    <div class="tui-form__row">
+                        <input class="tui-space_top-2"
+                               min="1997-01-01"
+                               max="2030-12-31"
+                               style="width: 100%;"
+                               type="date"
+                               formControlName="birthdate">
+                    </div>
+                    <div class="tui-form__buttons tui-form__buttons_align_end">
+                        <button type="submit"
+                                tuiButton
+                                size="s">
+                            Cập nhật
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="select-avatar"
+                 [ngClass.lt-md]="'select-avatar-responsive'"
+                 fxFlex="calc(40% - 32px)"
+                 fxFlex.lt-md="70"
+                 fxLayout="column"
+                 fxLayoutGap="1rem"
+                 fxLayoutAlign="center center">
+                <tui-avatar size="xl"
+                            [text]="user.fullname"
+                            [avatarUrl]="avatarURL"
+                            [autoColor]="true"
+                            [rounded]="true"></tui-avatar>
+                <div>
+                    <form [formGroup]="updateAvatarForm"
+                          (ngSubmit)="updateAvatar()">
+                        <div class="tui-form__row">
+                            <tui-input-files accept="image/*"
+                                             formControlName="avatar"
+                                             tuiTextfieldSize="m"></tui-input-files>
+                        </div>
+                        <div class="tui-form__buttons tui-form__buttons_align_end"
+                             fxLayout="row"
+                             fxLayoutGap="1rem">
+                            <button tuiButton
+                                    size="xs"
+                                    [disabled]="!updateAvatarForm.value.avatar"
+                                    type="submit">
+                                Upload
+                            </button>
+                        </div>
+                    </form>
+                    <div class="description"
+                         style="text-align: center; margin-top: 2rem;">
+                        <p>Dụng lượng file tối đa 1 MB</p>
+                        <p>Định dạng:.JPEG, .PNG</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </tui-loader>
+</div>

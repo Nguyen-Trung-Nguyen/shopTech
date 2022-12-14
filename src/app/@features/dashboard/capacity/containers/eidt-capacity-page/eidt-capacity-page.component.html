@@ -1,0 +1,46 @@
+<div class="wrapper">
+    <div class="header">
+        <p class="tui-text_h5"> Chỉnh sửa danh mục</p>
+    </div>
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <div class="body">
+            <form [formGroup]="editForm"
+                  *ngIf="capacity$ |async as color"
+                  (submit)="update()">
+                <div class="tui-form__header tui-form__header_margin-top_none"
+                     fxLayout="row"
+                     fxLayoutGap="0.5rem">
+                    <span class="active">*</span>
+                    <p class="tui-text_body-l-2">Tên</p>
+                </div>
+                <div class="tui-form__row">
+                    <tui-input formControlName="name"
+                               [tuiTextfieldLabelOutside]="true"
+                               [tuiTextfieldCleaner]="true"
+                               tuiTextfieldSize="m">
+                        Nhập tên màu
+                    </tui-input>
+                    <tui-error formControlName="name"
+                               [error]="[] | tuiFieldError | async"></tui-error>
+                </div>
+                <div fxLayout="row"
+                     fxLayoutGap="1rem"
+                     class="tui-form__buttons tui-form__buttons_align_end">
+                    <button tuiButton
+                            (click)="goBack()"
+                            size="s">
+                        Trở lại
+                    </button>
+                    <button type="submit"
+                            [disabled]="hasChange || editForm.invalid"
+                            tuiButton
+                            size="s">
+                        Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </tui-loader>
+</div>

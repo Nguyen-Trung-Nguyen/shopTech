@@ -1,0 +1,59 @@
+<div class="wrapper">
+    <h1 class="tui-text_body-xl tui-space_bottom-4">Đăng nhập</h1>
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <form fxLayout="column"
+              fxLayoutGap="0.5rem"
+              [formGroup]="signinForm"
+              (ngSubmit)="onSubmit()">
+            <tui-input formControlName="email"
+                       tuiTextfieldSize="m">Email
+            </tui-input>
+            <tui-error formControlName="email"
+                       [error]="[] | tuiFieldError | async"></tui-error>
+            <tui-input-password formControlName="password"
+                                tuiTextfieldSize="m">
+                Mật khẩu
+            </tui-input-password>
+            <tui-error formControlName="password"
+                       [error]="[] | tuiFieldError | async"></tui-error>
+            <ng-template #messsage>
+                <!-- <p class="success">{{(messageResponse$ | async)?.message}}</p> -->
+            </ng-template>
+            <p *ngIf="(error$ | async); else messsage"
+               class="error">{{(error$ | async)?.message}}</p>
+            <button type="submit"
+                    tuiButton
+                    [disabled]="!signinForm.valid"
+                    size="s">
+                Đăng nhập
+            </button>
+            <a routerLink="/auth/dang-ky">
+                <span>
+                    Đăng ký tài khoản
+                    <tui-svg src="tuiIconUser"></tui-svg>
+                </span>
+            </a>
+        </form>
+        <div class="social-login"
+             fxLayout="column"
+             fxLayoutGap="1rem">
+            <ng-container *ngFor="let item of listSocialLogin">
+                <button tuiButton
+                        (click)="openWindow(item)"
+                        fxFlex
+                        size="s"
+                        [appearance]="item.appearance">
+                    <div fxLayout="row"
+                         fxLayoutAlign="center center"
+                         fxLayoutGap="1.5rem">
+                        <img class="image"
+                             [src]="item.iconUrl" />
+                        <p>Đăng nhập với {{item.name}}</p>
+                    </div>
+                </button>
+            </ng-container>
+        </div>
+    </tui-loader>
+</div>

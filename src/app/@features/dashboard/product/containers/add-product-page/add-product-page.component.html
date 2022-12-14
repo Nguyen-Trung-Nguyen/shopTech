@@ -1,0 +1,329 @@
+<div class="wrapper">
+    <div class="header">
+        <p class="tui-text_h5">Thêm sản phẩm</p>
+    </div>
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <div class="body"
+             fxLayout="column">
+            <div class="productForm">
+                <form [formGroup]="addForm"
+                      (submit)="create()">
+                    <div class="tui-form__header tui-form__header_margin-top_none"
+                         fxLayout="row"
+                         fxLayoutGap="0.5rem">
+                        <span class="active">*</span>
+                        <p class="tui-text_body-l-2">Tên sản phẩm</p>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-input formControlName="name"
+                                   [tuiTextfieldLabelOutside]="true"
+                                   [tuiTextfieldCleaner]="true"
+                                   tuiTextfieldSize="m">
+                            Nhập tên sản phẩm
+                        </tui-input>
+                        <tui-error formControlName="name"
+                                   [error]="[] | tuiFieldError | async"></tui-error>
+                    </div>
+                    <div class="tui-form__header"
+                         fxLayout="row"
+                         fxLayoutGap="0.5rem">
+                        <span class="active">*</span>
+                        <p class="tui-text_body-l-2">Danh mục</p>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-multi-select placeholder="Tìm kiếm..."
+                                          *tuiLet="categories$ | async as items"
+                                          tuiTextfieldSize="m"
+                                          formControlName="categories"
+                                          [tuiTextfieldCleaner]="true"
+                                          [stringify]="stringify"
+                                          [tuiTextfieldLabelOutside]="true">
+                            Chọn danh mục (có thể chọn một hoặc nhiều)
+                            <tui-data-list-wrapper *tuiDataList
+                                                   [items]="items | tuiFilterByInputWith: stringify"
+                                                   [itemContent]="categoryContent"
+                                                   tuiMultiSelectGroup>
+                            </tui-data-list-wrapper>
+                        </tui-multi-select>
+                        <ng-template #categoryContent
+                                     let-item>
+                            <div fxLayout="row"
+                                 fxLayoutAlign="center center"
+                                 fxLayoutGap="1rem">
+                                <img class="icon"
+                                     [src]="item.image?.url" />
+                                <p> {{item.name}}</p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div class="tui-form__header"
+                         fxLayout="row"
+                         fxLayoutGap="0.5rem">
+                        <span class="active">*</span>
+                        <p class="tui-text_body-l-2">Màu sắc</p>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-multi-select placeholder="Tìm kiếm..."
+                                          *tuiLet="colors$ | async as items"
+                                          tuiTextfieldSize="m"
+                                          formControlName="colors"
+                                          [tuiTextfieldCleaner]="true"
+                                          [stringify]="stringify"
+                                          [tuiTextfieldLabelOutside]="true">
+                            Chọn màu sắc (có thể chọn một hoặc nhiều)
+                            <tui-data-list-wrapper *tuiDataList
+                                                   [items]="items | tuiFilterByInputWith: stringify"
+                                                   [itemContent]="colorContent"
+                                                   tuiMultiSelectGroup>
+                            </tui-data-list-wrapper>
+                        </tui-multi-select>
+                        <ng-template #colorContent
+                                     let-item>
+                            <div fxLayout="row"
+                                 fxLayoutAlign="center center"
+                                 fxLayoutGap="1rem">
+                                <p> {{item.name}}</p>
+                                <div class="circle"
+                                     [style.background-color]="item.hex"></div>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div *ngFor="let control of colorForm.controls; let i = index">
+                        <ng-container [formGroup]="getColorByIndex(i)">
+                            <div class="tui-form__header"
+                                 fxLayout="row"
+                                 fxLayoutGap="1rem">
+                                <tui-input formControlName="name"
+                                           [readOnly]="true"
+                                           fxFlex="33"
+                                           [tuiTextfieldLabelOutside]="true"
+                                           tuiTextfieldSize="m">
+                                </tui-input>
+                                <tui-input-number formControlName="price"
+                                                  fxFlex="33"
+                                                  tuiTextfieldSize="m"
+                                                  [postfix]="'đ' | tuiCurrency">
+                                    Nhập số tiền
+                                </tui-input-number>
+                                <tui-input-count formControlName="stock"
+                                                 fxFlex="33"
+                                                 tuiTextfieldSize="m"
+                                                 [max]="999999">
+                                    Số lượng:
+                                </tui-input-count>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="tui-form__header"
+                         fxLayout="row"
+                         fxLayoutGap="0.5rem">
+                        <span class="active">*</span>
+                        <p class="tui-text_body-l-2">Dung lượng</p>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-multi-select placeholder="Tìm kiếm..."
+                                          *tuiLet="capacities$ | async as items"
+                                          tuiTextfieldSize="m"
+                                          formControlName="capacities"
+                                          [tuiTextfieldCleaner]="true"
+                                          [stringify]="stringify"
+                                          [tuiTextfieldLabelOutside]="true">
+                            Chọn dung lượng (có thể chọn một hoặc nhiều)
+                            <tui-data-list-wrapper *tuiDataList
+                                                   [items]="items | tuiFilterByInputWith: stringify"
+                                                   [itemContent]="capacityContent"
+                                                   tuiMultiSelectGroup>
+                            </tui-data-list-wrapper>
+                        </tui-multi-select>
+                        <ng-template #capacityContent
+                                     let-item>
+                            <div fxLayout="row"
+                                 fxLayoutAlign="center center"
+                                 fxLayoutGap="1rem">
+                                <p> {{item.name}}</p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div *ngFor="let control of capacityForm.controls; let i = index">
+                        <ng-container [formGroup]="getCapacityByIndex(i)">
+                            <div class="tui-form__header"
+                                 fxLayout="row"
+                                 fxLayoutGap="1rem">
+                                <tui-input formControlName="name"
+                                           [readOnly]="true"
+                                           fxFlex="33"
+                                           [tuiTextfieldLabelOutside]="true"
+                                           tuiTextfieldSize="m">
+                                </tui-input>
+                                <tui-input-number formControlName="price"
+                                                  fxFlex="33"
+                                                  tuiTextfieldSize="m"
+                                                  [postfix]="'đ' | tuiCurrency">
+                                    Nhập số tiền
+                                </tui-input-number>
+                                <tui-input-count formControlName="stock"
+                                                 fxFlex="33"
+                                                 tuiTextfieldSize="m"
+                                                 [max]="999999">
+                                    Số lượng:
+                                </tui-input-count>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="tui-form__header"
+                         fxLayout="row"
+                         fxLayoutGap="0.5rem">
+                        <span class="active">*</span>
+                        <p class="tui-text_body-l-2">Trạng thái</p>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-toggle formControlName="status"
+                                    size="l"
+                                    [showIcons]="true"></tui-toggle>
+                    </div>
+                    <div class="tui-form__header"
+                         fxLayout="row"
+                         fxLayoutGap="0.5rem">
+                        <span class="active">*</span>
+                        <p class="tui-text_body-l-2">Hình ảnh</p>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-input-files accept="image/*"
+                                         [multiple]="true"
+                                         formControlName="images"
+                                         (reject)="onRejectImages($event)"></tui-input-files>
+                        <tui-files class="tui-space_top-1">
+                            <tui-file *ngFor="let file of addForm.get('images').valueChanges | async"
+                                      [file]="file"
+                                      (removed)="removeFile(file)"></tui-file>
+                            <tui-file *ngFor="let file of rejectedImages"
+                                      state="error"
+                                      [file]="file"
+                                      (removed)="clearRejectedImages(file)"></tui-file>
+                        </tui-files>
+                    </div>
+                    <div class="image-preview"
+                         style=" margin-top: 2rem;">
+                        <div fxLayout="column"
+                             fxLayoutAlign="center center"
+                             fxLayoutGap="5rem">
+                            <div tuiCarouselButtons
+                                 *ngIf="listUrlImage.length > 0"
+                                 fxLayout="row"
+                                 fxLayoutAlign="center center">
+                                <button tuiIconButton
+                                        appearance="whiteblock"
+                                        icon="tuiIconChevronLeftLarge"
+                                        title="Previous"
+                                        (click)="carousel.prev()"></button>
+                                <tui-carousel [(index)]="index"
+                                              [duration]="4000"
+                                              style="width: 100%;height: 100%;"
+                                              fxLayout="row"
+                                              fxLayoutAlign="center center"
+                                              #carousel>
+                                    <ng-container *ngFor="let item of listUrlImage;let i = index;">
+                                        <img *tuiItem
+                                             (click)="showPreview(i)"
+                                             class="image"
+                                             [alt]="item.name"
+                                             [src]="item.url" />
+                                    </ng-container>
+                                </tui-carousel>
+                                <button tuiIconButton
+                                        appearance="whiteblock"
+                                        icon="tuiIconChevronRightLarge"
+                                        title="Next"
+                                        (click)="carousel.next()"></button>
+                            </div>
+                            <div tuiCarouselButtons
+                                 *ngIf="listUrlImage.length > 0"
+                                 fxLayout="row"
+                                 fxLayoutAlign="center center">
+                                <button tuiIconButton
+                                        appearance="whiteblock"
+                                        size="xs"
+                                        icon="tuiIconChevronLeftLarge"
+                                        title="Previous"
+                                        (click)="carouselPagination.prev()"></button>
+                                <tui-carousel [itemsCount]="5"
+                                              #carouselPagination>
+                                    <ng-container *ngFor="let item of listUrlImage;let i = index;">
+                                        <img class="image"
+                                             [class.active_image]="i === index"
+                                             *tuiItem
+                                             (click)="showInCarsouel(i)"
+                                             [alt]="item.name"
+                                             [src]="item.url" />
+                                    </ng-container>
+                                </tui-carousel>
+                                <button tuiIconButton
+                                        appearance="whiteblock"
+                                        size="xs"
+                                        icon="tuiIconChevronRightLarge"
+                                        title="Next"
+                                        (click)="carouselPagination.next()"></button>
+                            </div>
+                            <ng-template #preview
+                                         let-preview>
+                                <tui-preview [rotatable]="true">
+                                    <tui-preview-title>{{ title$ | async }}</tui-preview-title>
+                                    <tui-preview-pagination [length]="this.listUrlImage.length"
+                                                            [index]="index$$.value"
+                                                            (indexChange)="index$$.next($event)">
+                                    </tui-preview-pagination>
+                                    <img *ngIf="imageSrc$ | async as src"
+                                         class="image"
+                                         [src]="src" />
+                                    <button tuiIconButton
+                                            tuiPreviewAction
+                                            icon="tuiIconCloseLarge"
+                                            title="Close"
+                                            (click)="preview.complete()"></button>
+                                </tui-preview>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="tui-form__header"
+                         fxLayout="row"
+                         fxLayoutGap="0.5rem">
+                        <span class="active">*</span>
+                        <p class="tui-text_body-l-2">Ảnh đại diện</p>
+                    </div>
+                    <div class="tui-form__row">
+                        <tui-input-files accept="image/*"
+                                         *ngIf="!addForm.value.thumbnail"
+                                         formControlName="thumbnail"
+                                         (reject)="onRejectThumbnail($event)"
+                                         tuiTextfieldSize="m"></tui-input-files>
+                        <tui-files class="tui-space_top-1">
+                            <tui-file *ngIf="addForm.value.thumbnail as file"
+                                      [file]="file"
+                                      (removed)="removeThumbnail()">
+                            </tui-file>
+                            <tui-file *ngIf="rejectedThumbnail$ | async as file"
+                                      state="error"
+                                      [file]="file"
+                                      (removed)="clearRejectedThumbnail()"></tui-file>
+                        </tui-files>
+                    </div>
+                    <div class="thumbnail-preview"
+                         style="margin-top:2rem;">
+                        <img class="image"
+                             [src]="urlThumbnailPreview" />
+                    </div>
+                    <div class="tui-form__buttons tui-form__buttons_align_end">
+                        <button tuiButton
+                                [disabled]="addForm.invalid"
+                                type="submit"
+                                size="s">
+                            Tạo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </tui-loader>
+</div>

@@ -1,0 +1,44 @@
+<div class="wrapper">
+    <div class="body">
+        <form [formGroup]="addForm"
+              (submit)="create()">
+            <div fxLayout="row"
+                 class="tui-form__header tui-form__header_margin-top_none"
+                 fxLayoutGap="0.5rem">
+                <span class="active">*</span>
+                <p class="tui-text_body-l-2">Tên màu sắc</p>
+            </div>
+            <div class="tui-form__row">
+                <tui-input formControlName="name"
+                           [tuiTextfieldLabelOutside]="true"
+                           [tuiTextfieldCleaner]="true"
+                           tuiTextfieldSize="m">
+                    Nhập tên màu sắc
+                </tui-input>
+                <tui-error formControlName="name"
+                           [error]="[] | tuiFieldError | async"></tui-error>
+            </div>
+            <div fxLayout="row"
+                 class="tui-form__header"
+                 fxLayoutGap="0.5rem">
+                <span class="active">*</span>
+                <p class="tui-text_body-l-2">Mã Hex</p>
+            </div>
+            <div class="tui-form__row">
+                <tui-input-color tuiTextfieldSize="m"
+                                 formControlName="hex"
+                                 [colors]="palette">
+                    Background color
+                </tui-input-color>
+            </div>
+            <div class="tui-form__buttons tui-form__buttons_align_end">
+                <button type="submit"
+                        [disabled]="addForm.invalid"
+                        tuiButton
+                        size="s">
+                    Tạo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

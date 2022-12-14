@@ -1,0 +1,44 @@
+<div class="wrapper">
+    <div class="header"
+         fxLayout="row"
+         fxLayoutAlign="center center"
+         fxLayoutGap="2rem">
+        <div class="input-search"
+             fxFlex="70%">
+            <tui-input [formControl]="search"
+                       [tuiTextfieldLabelOutside]="true"
+                       [tuiTextfieldCleaner]="true"
+                       tuiTextfieldSize="m">
+                Nhập tên hoặc số điện thoại để tìm kiếm...
+                <tui-data-list *tuiDataList>
+                    <a *ngFor="let item of searchResult$ |async"
+                       fxLayout="row"
+                       fxLayoutGap="0.5rem"
+                       fxLayoutAlign="start start"
+                       [routerLink]="item.slug"
+                       tuiOption>
+                        <p class="tui-text_body-m">{{item.fullName}}</p>
+                        <p class="tui-text_body-m">({{item.phoneNumber}})</p>
+                        <p class="tui-text_body-m gray">{{ item.orderDate | date: 'M/d/yy, h:mm a' }}</p>
+                        <p class="tui-text_body-m gray">({{ translateStatus(item.status)}})</p>
+                    </a>
+                </tui-data-list>
+            </tui-input>
+        </div>
+        <div class="input-select"
+             fxFlex="30%">
+            <tui-select [formControl]="status"
+                        [tuiTextfieldLabelOutside]="true"
+                        tuiTextfieldSize="m"
+                        [valueContent]="statusContent">
+                <tui-data-list-wrapper *tuiDataList
+                                       [items]="statusList"
+                                       [itemContent]="statusContent"></tui-data-list-wrapper>
+                <ng-template #statusContent
+                             let-item>
+                    <p>{{item.name}}</p>
+                </ng-template>
+            </tui-select>
+        </div>
+    </div>
+</div>

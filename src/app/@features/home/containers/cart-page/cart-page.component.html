@@ -1,0 +1,197 @@
+<div class="wrapper">
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <div class="body"
+             *ngIf="(carts$ | async)?.length > 0 ; else nocart"
+             fxLayout="row"
+             fxLayoutGap="1rem">
+            <div class="cart-item"
+                 fxFlex="70">
+                <div class="title">
+                    <div class="stepper">
+                        <tui-stepper [activeItemIndex]="0">
+                            <button tuiStep
+                                    stepState="pass">
+                                Giỏ hàng
+                            </button>
+                            <button tuiStep
+                                    disabled>
+                                Thanh toán & đặt hàng
+                            </button>
+                            <button tuiStep
+                                    disabled>
+                                Hoàn tất
+                            </button>
+                        </tui-stepper>
+                    </div>
+                </div>
+                <div class="list-product"
+                     fxLayout="column"
+                     fxLayoutGap="1rem">
+                    <div class="cart-item"
+                         fxLayout="row"
+                         fxLayoutAlign="space-between center"
+                         *ngFor="let item of carts$ | async; let i =index">
+                        <div fxLayout="row"
+                             fxLayoutAlign="none center"
+                             fxLayoutGap="0.5rem">
+                            <tui-checkbox [(ngModel)]="item.isChecked"
+                                          (change)="onItemChange(item)"></tui-checkbox>
+                            <a class="cart-item-content"
+                               fxFlex="70"
+                               [routerLink]="['/home', item.productCategories.slug, item.productSlug]"
+                               fxLayout="row"
+                               fxLayoutGap="1rem">
+                                <img fxFlex="30"
+                                     class="thumbnail"
+                                     [src]="item.productThumbnail.url" />
+                                <div class="content">
+                                    <div class="title-content"
+                                         fxLayout="row"
+                                         fxLayoutGap="0.3rem">
+                                        <p class="tui-text_body-m-2">{{item.productName}}</p>
+                                        <p *ngIf="item.productEntry.color"
+                                           class="tui-text_body-m-2">{{item.productEntry.color.name}}</p>
+                                        <p *ngIf="item.productEntry.capacity"
+                                           class="tui-text_body-m-2">{{item.productEntry.capacity.name}}</p>
+                                    </div>
+                                    <div class="price-content">
+                                        <div fxLayout="row">
+                                            <div>
+                                                <p *ngIf="item.productEntry.price !== item.productEntry.payPrice"
+                                                   class="price">{{item.productEntry.price | tuiFormatNumber}}
+                                                    <span class="prefix">đ</span>
+                                                </p>
+                                            </div>
+                                            <div *ngIf="item.productEntry.percent > 0"
+                                                 class="percent">
+                                                -{{item.productEntry.percent}}%
+                                            </div>
+                                        </div>
+                                        <p class="payPrice">{{item.productEntry.payPrice | tuiFormatNumber}}
+                                            <span class="prefix">đ</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="quantity"
+                             fxFlex="16"
+                             fxLayout="column"
+                             fxLayoutGap="0.5rem"
+                             fxLayoutAlign="center end">
+                            <tui-input-count style="width: 100%;"
+                                             [(ngModel)]="item.quantity"
+                                             (ngModelChange)="onQuantityChange(item)"
+                                             [min]="1"
+                                             [max]="1000"
+                                             [tuiTextfieldLabelOutside]="true"></tui-input-count>
+                            <button tuiIconButton
+                                    appearance="flat"
+                                    size="s"
+                                    icon="tuiIconTrash"
+                                    title="Xóa"
+                                    (click)="showTableBar(item.id)"
+                                    shape="rounded"></button>
+                            <ng-template #tableBarTemplate
+                                         let-close>
+                                <div tuiMode="onDark"
+                                     fxLayout="row"
+                                     fxLayoutGap="2rem">
+                                    <p>Bạn có chắc rằng muốn xóa không ?</p>
+                                    <button tuiButton
+                                            type="button"
+                                            (click)="remove()"
+                                            size="m">
+                                        Đồng ý
+                                    </button>
+                                    <button tuiButton
+                                            type="button"
+                                            appearance="outline"
+                                            (click)="close()"
+                                            size="m">
+                                        Hủy bỏ
+                                    </button>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="infor-cart"
+                 fxFlex="30">
+                <div class="title">
+                    <p class="tui-text_h5">Tổng quát: </p>
+                </div>
+                <div class="detail">
+                    <div fxLayout="row"
+                         fxLayoutAlign="space-between center">
+                        <p class="tui-text_body-m">Tiền hàng: </p>
+                        <p class="payPrice">{{totalPriceChecked | tuiFormatNumber}}
+                            <span class="prefix">đ</span>
+                        </p>
+                    </div>
+                    <div fxLayout="row"
+                         fxLayoutAlign="space-between center">
+                        <p class="tui-text_body-m">Giảm giá: </p>
+                        <p class="payPrice">0
+                            <span class="prefix">đ</span>
+                        </p>
+                    </div>
+                    <div fxLayout="row"
+                         fxLayoutAlign="space-between center">
+                        <p class="tui-text_body-m">Vận chuyển: </p>
+                        <p class="payPrice">0
+                            <span class="prefix">đ</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="pay"
+                     fxLayout="column"
+                     fxLayoutGap="1rem">
+                    <div fxLayout="row"
+                         fxLayoutAlign="space-between center">
+                        <p class="tui-text_body-m">Tạm tính({{totalItemChecked}} sản phẩm): </p>
+                        <p class="payPrice">{{totalPriceChecked | tuiFormatNumber}}
+                            <span class="prefix">đ</span>
+                        </p>
+                    </div>
+                    <div fxLayout="row"
+                         fxLayoutAlign="none center"
+                         fxLayoutGap="2rem">
+                        <a tuiButton
+                           appearance="outline"
+                           [routerLink]="['/']"
+                           size="s">
+                            Tiếp tục mua sắm
+                        </a>
+                        <button tuiButton
+                                appearance="custom"
+                                [disabled]="disabledOrder"
+                                (click)="onOrder()"
+                                size="s">
+                            Tiến hành đặt hàng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #nocart>
+            <div class="no-cart"
+                 fxLayout="column"
+                 fxLayoutGap="1rem"
+                 fxLayoutAlign="none center">
+                <img class="empty-cart"
+                     [src]="emptyCartUrl" />
+                <p class="tui-text_body-l-2">Giỏ hàng của bạn hiện đang trống!</p>
+                <a tuiButton
+                   appearance="custom"
+                   [routerLink]="['/']"
+                   size="s">
+                    Mua sắm
+                </a>
+            </div>
+        </ng-template>
+    </tui-loader>
+</div>

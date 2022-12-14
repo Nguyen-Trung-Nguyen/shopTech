@@ -1,0 +1,114 @@
+<div class="wrapper">
+    <div class="header"
+         fxLayout="row"
+         fxLayoutAlign="space-between">
+        <p class="tui-text_body-m"
+           *ngIf="!(expanedAddressForm$ | async) && !(expanedEditAddressForm$ | async)">Địa chỉ của tôi</p>
+        <p class="tui-text_body-m"
+           *ngIf="(expanedAddressForm$ | async) && !(expanedEditAddressForm$ | async)">Thêm địa chỉ</p>
+        <p class="tui-text_body-m"
+           *ngIf="(expanedEditAddressForm$ | async)">Cập nhật địa chỉ</p>
+        <button tuiIconButton
+                appearance="accent"
+                size="s"
+                [disabled]="(expanedEditAddressForm$ | async)"
+                icon="tuiIconPlusLarge"
+                shape="rounded"
+                (click)="showAddForm()"></button>
+    </div>
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <div class="body">
+            <div>
+                <tui-expand [expanded]="expanedAddressForm$ | async">
+                    <ng-template tuiExpandContent>
+                        <app-address-form></app-address-form>
+                    </ng-template>
+                </tui-expand>
+                <tui-expand [expanded]="expanedEditAddressForm$ | async">
+                    <ng-template tuiExpandContent>
+                        <app-eidt-address-form [id]="id"></app-eidt-address-form>
+                    </ng-template>
+                </tui-expand>
+            </div>
+            <div class="list-address"
+                 *ngIf="(address$ | async)?.length > 0;else noaddress">
+                <div class="address"
+                     fxLayout="row"
+                     fxLayoutAlign="space-between center"
+                     *ngFor="let item of address$ | async">
+                    <div class="infor">
+                        <p class="tui-text_body-m ">{{item.fullName}}</p>
+                        <p class="tui-text_body-m gray">{{item.phoneNumber}}</p>
+                        <p class="tui-text_body-m gray">{{item.detailAddress}}</p>
+                        <p class="tui-text_body-m gray">{{item.completeAddress}}</p>
+                        <tui-tag *ngIf="item.isDefault"
+                                 status="custom"
+                                 class="tag"
+                                 [hoverable]="true"
+                                 value="Mặc định"></tui-tag>
+                    </div>
+                    <div class="action"
+                         fxLayout="column"
+                         fxLayoutAlign="end end"
+                         fxLayoutGap="0.5rem"
+                         *ngIf="!(expanedAddressForm$ | async) ">
+                        <div>
+                            <button tuiIconButton
+                                    *ngIf="!item.isDefault"
+                                    appearance="flat"
+                                    size="s"
+                                    icon="tuiIconTrash"
+                                    title="Xóa"
+                                    (click)="showTableBar(item.id)"
+                                    shape="rounded"></button>
+                            <button tuiIconButton
+                                    appearance="flat"
+                                    size="s"
+                                    icon="tuiIconEdit"
+                                    title="Chỉnh sửa"
+                                    (click)="showEditForm(item.id)"
+                                    shape="rounded"></button>
+                        </div>
+                        <div *ngIf="!item.isDefault">
+                            <button tuiButton
+                                    (click)="setDefault(item.id)"
+                                    size="xs">
+                                Thiết lập mặc định
+                            </button>
+                        </div>
+                        <ng-template #tableBarTemplate
+                                     let-close>
+                            <div tuiMode="onDark"
+                                 fxLayout="row"
+                                 fxLayoutGap="2rem">
+                                <p>Bạn có chắc rằng muốn xóa không ?</p>
+                                <button tuiButton
+                                        type="button"
+                                        (click)="remove()"
+                                        size="m">
+                                    Đồng ý
+                                </button>
+                                <button tuiButton
+                                        type="button"
+                                        appearance="outline"
+                                        (click)="close()"
+                                        size="m">
+                                    Hủy bỏ
+                                </button>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #noaddress>
+            <div class="noaddress"
+                 fxLayout="row"
+                 fxLayoutAlign="center center">
+                <p class="tui-text_body-xl">Địa chỉ của bạn hiện đang trống!</p>
+            </div>
+        </ng-template>
+    </tui-loader>
+</div>

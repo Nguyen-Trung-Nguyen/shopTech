@@ -1,0 +1,282 @@
+<div class="wrapper">
+    <tui-loader [showLoader]="loading$ | async"
+                [inheritColor]="true"
+                [overlay]="true">
+        <div class="body"
+             fxLayout="column"
+             fxLayoutGap="1rem">
+            <div class="stepper">
+                <tui-stepper [activeItemIndex]="1">
+                    <button tuiStep
+                            disabled>
+                        Giỏ hàng
+                    </button>
+                    <button tuiStep
+                            disabled>
+                        Thanh toán & đặt hàng
+                    </button>
+                    <button tuiStep
+                            disabled>
+                        Hoàn tất
+                    </button>
+                </tui-stepper>
+            </div>
+            <div class="information"
+                 *ngIf="!isLoggedIn"
+                 fxLayout="column"
+                 fxLayoutGap="1rem">
+                <div class="address-title"
+                     fxLayout="row"
+                     fxLayoutGap="1rem">
+                    <p class="tui-text_body-l">Thông tin khách hàng
+                    </p>
+                </div>
+                <app-client-user-form (newItemEvent)="getInformation($event)"></app-client-user-form>
+            </div>
+            <div class="address"
+                 *ngIf="isLoggedIn"
+                 fxLayout="column"
+                 fxLayoutGap="1rem">
+                <div class="address-title"
+                     fxLayout="row"
+                     fxLayoutGap="1rem">
+                    <tui-svg src="tuiIconGeoLarge"></tui-svg>
+                    <p class="tui-text_body-l">Địa chỉ nhận hàng
+                    </p>
+                </div>
+                <div class="address-infor"
+                     *ngIf="(addressList$ | async)?.length > 0;else noaddress">
+                    <tui-select [(ngModel)]="address"
+                                tuiTextfieldSize="m"
+                                [tuiTextfieldLabelOutside]="true"
+                                [valueContent]="itemContent">
+                        Chọn địa chỉ nhận hàng
+                        <tui-data-list-wrapper *tuiDataList
+                                               [itemContent]="itemContent"
+                                               [items]="addressList$ | async"></tui-data-list-wrapper>
+                    </tui-select>
+                    <ng-template #itemContent
+                                 let-item>
+                        <div fxLayout="row"
+                             fxLayoutGap="3rem">
+                            <div fxLayout="row"
+                                 fxLayoutGap="0.3rem">
+                                <p> {{item.fullName}}, </p>
+                                <p>{{item.phoneNumber}}, </p>
+                                <p>{{item.detailAddress}}</p>
+                                <p>{{item.completeAddress}}.</p>
+                            </div>
+                            <div *ngIf="item.isDefault">
+                                <tui-tag status="custom"
+                                         size="s"
+                                         class="tag"
+                                         [hoverable]="true"
+                                         value="Mặc định"></tui-tag>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+                <ng-template #noaddress>
+                    <a routerLink="/user/address">
+                        <p class="tui-text_body-m">Có vẻ như bạn chưa có địa chỉ nhận hàng! Click vào đây để cập nhật.
+                        </p>
+                    </a>
+                </ng-template>
+            </div>
+            <div class="product"
+                 fxLayout="column"
+                 fxLayoutGap="2rem">
+                <div class="product-title"
+                     fxLayout="row"
+                     fxLayoutGap="1rem">
+                    <div fxFlex="50">
+                        <p class="tui-text_body-l">Sản phẩm</p>
+                    </div>
+                    <div fxFlex="50"
+                         fxLayout="row"
+                         fxLayoutAlign="space-between">
+                        <div fxLayout="row"
+                             fxLayoutGap="6rem">
+                            <p class="tui-text_body-m gray">Đơn giá</p>
+                            <p class="tui-text_body-m gray">Số lượng</p>
+                        </div>
+                        <div>
+                            <p class="tui-text_body-m gray">Thành tiền</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-list"
+                     *ngIf="itemChecked$|async as items">
+                    <div *ngFor="let item of items"
+                         fxLayout="column"
+                         fxLayoutGap="1rem">
+                        <div fxLayout="row"
+                             fxLayoutGap="1rem">
+                            <div fxFlex="50">
+                                <img class="thumbnail"
+                                     fxFlex="20"
+                                     [src]="item.productThumbnail.url" />
+                                <div class="title-content"
+                                     fxLayout="row"
+                                     fxLayoutGap="0.3rem">
+                                    <p class="tui-text_body-m-2">{{item.productName}}</p>
+                                    <p *ngIf="item.productEntry.color"
+                                       class="tui-text_body-m-2">{{item.productEntry.color.name}}</p>
+                                    <p *ngIf="item.productEntry.capacity"
+                                       class="tui-text_body-m-2">{{item.productEntry.capacity.name}}</p>
+                                </div>
+                            </div>
+                            <div fxFlex="50"
+                                 fxLayout="row"
+                                 fxLayoutAlign="space-between">
+                                <div fxLayout="row"
+                                     fxLayoutGap="5rem">
+                                    <p class="payPrice">{{item.productEntry.payPrice | tuiFormatNumber}}
+                                        <span class="prefix">đ</span>
+                                    </p>
+                                    <p class="tui-text_body-m gray">{{item.quantity}}</p>
+                                </div>
+                                <div>
+                                    <p class="payPrice">
+                                        {{item.productEntry.payPrice * item.quantity | tuiFormatNumber}}
+                                        <span class="prefix">đ</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-checkout"
+                     fxLayout="row"
+                     fxLayoutGap="1rem">
+                    <div fxFlex="50"
+                         fxLayout="row"
+                         fxLayoutAlign="center center"
+                         fxLayoutGap="1rem">
+                        <p class="tui-text_body-m">Lời nhắn: </p>
+                        <tui-input fxFlex="70"
+                                   [(ngModel)]="description"
+                                   [tuiTextfieldCleaner]="true"
+                                   tuiTextfieldSize="m">
+                            Yêu cầu...
+                        </tui-input>
+                    </div>
+                    <div fxFlex="50"
+                         fxLayout="row"
+                         fxLayoutAlign="space-between">
+                        <div fxLayout="row"
+                             fxLayoutGap="5rem">
+                            <p class="tui-text-body-s-2 gray">Nhận hàng vào:
+                                {{ soonGetProductTime | date: 'd/M' }} - {{
+                                lateGetProductTIme | date: 'd/M' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="total-checkout"
+                     fxLayout="row"
+                     fxLayoutAlign="end end">
+                    <div fxLayout="row"
+                         fxLayoutGap="0.3rem"
+                         fxLayoutAlign="center center">
+                        <p class="tui-text_body-m gray">
+                            Tổng số tiền( {{totalItemChecked$|async}} sản phẩm ):
+                        </p>
+                        <p style="font-size: 18px;line-height: 24px;"
+                           class="payPrice">
+                            {{totalPriceChecked$|async | tuiFormatNumber}}
+                            <span class="prefix">đ</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="method">
+                <div class="shipping-method">
+                    <p class="tui-text_body-l tui-space_bottom-3">Phương thức vận chuyển</p>
+                    <ng-container *ngFor="let item of shippingMethod">
+                        <tui-radio-labeled [(ngModel)]="shipping"
+                                           class="tui-space_bottom-3"
+                                           size="l"
+                                           [item]="item">
+                            <div>
+                                <p class="tui-text_body-m ">
+                                    {{item.name}}
+                                </p>
+                                <p class="tui-text_body-s gray ">
+                                    {{item.description}}
+                                </p>
+                            </div>
+                        </tui-radio-labeled>
+                    </ng-container>
+                    <iframe *ngIf="shipping.name === 'Nhận hàng tại cửa hàng'"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.8414543441604!2d105.76842125009442!3d10.029938975235495!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a0895a51d60719%3A0x9d76b0035f6d53d0!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBD4bqnbiBUaMah!5e0!3m2!1svi!2s!4v1667354423986!5m2!1svi!2s"
+                            width="100%"
+                            height="450"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+                <div class="payment-method">
+                    <p class="tui-text_body-l tui-space_bottom-3">Phương thức thanh toán</p>
+                    <ng-container *ngFor="let item of paymentMethod">
+                        <tui-radio-labeled [(ngModel)]="payment"
+                                           class="tui-space_bottom-3"
+                                           size="l"
+                                           [item]="item">
+                            <div>
+                                <p class="tui-text_body-m ">
+                                    {{item.name}}
+                                </p>
+                            </div>
+                        </tui-radio-labeled>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="order"
+                 fxLayout="row"
+                 fxLayoutAlign="end end">
+                <div fxLayout="column"
+                     fxLayoutGap="0.5rem">
+                    <div fxLayout="row"
+                         fxLayoutGap="0.3rem">
+                        <p class="tui-text_body-m gray">
+                            Tổng tiền hàng:
+                        </p>
+                        <p class="payPrice">
+                            {{totalPriceChecked$|async | tuiFormatNumber}}
+                            <span class="prefix">đ</span>
+                        </p>
+                    </div>
+                    <div fxLayout="row"
+                         fxLayoutGap="0.3rem">
+                        <p class="tui-text_body-m gray">
+                            Phí vận chuyển:
+                        </p>
+                        <p class="payPrice">
+                            0
+                            <span class="prefix">đ</span>
+                        </p>
+                    </div>
+                    <div fxLayout="row"
+                         fxLayoutGap="0.3rem">
+                        <p class="tui-text_body-m gray">
+                            Tổng thanh toán:
+                        </p>
+                        <p class="payPrice">
+                            {{totalPriceChecked$ | async | tuiFormatNumber}}
+                            <span class="prefix">đ</span>
+                        </p>
+                    </div>
+                    <button tuiButton
+                            (click)="onOrder()"
+                            [disabled]="disabled"
+                            size="s">
+                        Đặt hàng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </tui-loader>
+</div>

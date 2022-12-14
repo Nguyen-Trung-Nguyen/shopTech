@@ -1,0 +1,54 @@
+.nav {
+	position: fixed;
+	width: 100%;
+	height: 7rem;
+	border-bottom: 1px solid #ededed;
+	box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 16px 0px;
+	background-color: #ffffff;
+	z-index: 1;
+	padding: 1rem 6rem;
+}
+
+.icon_menu {
+	cursor: pointer;
+}
+.icon_menu:hover {
+	transition: ease-in 0.5s;
+	opacity: 50;
+	color: gray;
+}
+
+.item-detail:hover {
+	color: var(--tui-negative);
+}
+
+a:hover {
+	color: var(--tui-negative);
+}
+
+.image {
+	width: 20px;
+	height: 20px;
+}
+.badge-notification {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+.badge {
+	position: absolute;
+	right: 0;
+	top: 0rem;
+	z-index: 1;
+}
+.notification-header {
+	padding: 1rem 1rem;
+	border-bottom: 1px solid gray;
+}
+
+.unRead {
+	border-radius: 50%;
+	background-color: #2e89ff;
+	width: 12px;
+	height: 12px;
+}

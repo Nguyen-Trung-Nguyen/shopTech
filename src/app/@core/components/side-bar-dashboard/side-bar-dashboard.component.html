@@ -1,0 +1,75 @@
+<div class="wrapper">
+    <tui-scrollbar class="box">
+        <div class="information"
+             *ngIf="(user$ | async) as user"
+             fxLayout="column"
+             fxLayoutGap="1rem"
+             fxLayoutAlign="none center">
+            <tui-avatar [text]="user.fullname"
+                        [avatarUrl]="url"
+                        size="m"
+                        [autoColor]="true"
+                        [rounded]="true"></tui-avatar>
+            <p style="color: var(--tui-neutral-fill);">{{ user.fullname }}</p>
+            <p style="color: var(--tui-negative);"> {{ vietnamRole }}</p>
+        </div>
+        <ng-container *ngFor="let item of accordions">
+            <tui-accordion [closeOthers]="true">
+                <tui-accordion-item [borders]="null"
+                                    size="s">
+                    <div fxLayout="row"
+                         fxLayoutGap="1rem"
+                         fxLayoutAlign="none center">
+                        <img [src]="item.imgSrc"
+                             class="external-icon" />
+                        <h1 style="font-size: 16px;">{{item.name}}</h1>
+                    </div>
+                    <ng-template tuiAccordionItemContent>
+                        <ng-container *ngFor="let itemAccordion of item.accordionItem ; let i = index">
+                            <div fxLayout="column"
+                                 fxLayoutGap="0.5rem">
+                                <ng-container *ngIf="itemAccordion.itemExpand?.length > 0;else noExpand">
+                                    <a (click)="indexExpand=indexExpand == i? -1 : i">
+                                        <span style="font-size: 15px;padding-bottom: 1rem;">
+                                            <tui-svg [style.transform]="indexExpand != i ?'rotate(0)': 'rotate(90deg)'"
+                                                     src="tuiIconChevronRight"></tui-svg>
+                                            {{itemAccordion.name}}
+                                        </span>
+                                    </a>
+                                </ng-container>
+                            </div>
+                            <ng-template #noExpand>
+                                <div class="expand">
+                                    <a [routerLink]="itemAccordion.routerLink">
+                                        <span routerLinkActive="active"
+                                              [routerLinkActiveOptions]="{ exact: true }"
+                                              style="font-size: 15px; padding-bottom: 1rem;">
+                                            {{itemAccordion.name}}
+                                        </span>
+                                    </a>
+                                </div>
+                            </ng-template>
+                            <tui-expand [expanded]="indexExpand == i">
+                                <ng-template tuiExpandContent>
+                                    <div fxLayout="column"
+                                         fxLayoutGap="0.5rem"
+                                         class="expand">
+                                        <ng-container *ngFor="let itemExpand of itemAccordion.itemExpand">
+                                            <a [routerLink]="itemExpand.routerLink">
+                                                <span routerLinkActive="active"
+                                                      [routerLinkActiveOptions]="{ exact: true }"
+                                                      style="font-size: 15px; padding-bottom: 1rem;">
+                                                    {{itemExpand.name}}
+                                                </span>
+                                            </a>
+                                        </ng-container>
+                                    </div>
+                                </ng-template>
+                            </tui-expand>
+                        </ng-container>
+                    </ng-template>
+                </tui-accordion-item>
+            </tui-accordion>
+        </ng-container>
+    </tui-scrollbar>
+</div>

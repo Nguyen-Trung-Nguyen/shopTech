@@ -1,0 +1,26 @@
+.wrapper {
+	width: 100%;
+}
+
+.content {
+	position: absolute;
+	padding: 1rem 0;
+	top: 7rem;
+	padding-left: 17rem;
+	width: 100%;
+	background-color: #fcfafc;
+	z-index: -1;
+}
+.default {
+	position: absolute;
+	padding: 1rem 0;
+	top: 7rem;
+	width: 100%;
+	background-color: #fcfafc;
+	z-index: -1;
+}
+
+.hide_sidebar {
+	display: none;
+	transition: all 1s ease-out;
+}

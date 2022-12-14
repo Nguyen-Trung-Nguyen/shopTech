@@ -1,0 +1,98 @@
+<div class="wrapper">
+    <div class="header"
+         fxLayout="row"
+         fxLayoutAlign="space-between">
+        <p class="tui-text_h5"> Danh sách sản phẩm</p>
+    </div>
+    <div class="body"
+         fxLayout="column"
+         fxLayoutGap="3rem">
+        <app-filter-list-product></app-filter-list-product>
+        <tui-loader [showLoader]="loading$ | async"
+                    [inheritColor]="true"
+                    [overlay]="true">
+            <table tuiTable
+                   style="width:100%; height: 100%"
+                   *ngIf="(products$ | async) as product;">
+                <thead>
+                    <tr>
+                        <th tuiTh>STT</th>
+                        <th tuiTh>
+                            Hình ảnh
+                        </th>
+                        <th tuiTh>
+                            Tên
+                        </th>
+                        <th tuiTh>
+                            Status
+                        </th>
+                        <th tuiTh>
+                            Ngày tạo
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of product; let index = index"
+                        #dropdown="tuiDropdown"
+                        tuiDropdownContext
+                        [tuiDropdown]="contextMenu">
+                        <ng-template #contextMenu>
+                            <tui-data-list role="menu"
+                                           tuiDataListDropdownManager
+                                           class="context-menu">
+                                <button *ngFor="let menu of menuItems"
+                                        tuiOption
+                                        (click)="printToConsole(menu.title, item); dropdown.toggle(false)">
+                                    {{ menu.title }}
+                                    <tui-svg class="icon"
+                                             [src]="menu.iconName"></tui-svg>
+                                </button>
+                            </tui-data-list>
+                        </ng-template>
+                        <td tuiTd>{{ index + 1 }}</td>
+                        <td tuiTd
+                            style="text-align: center;">
+                            <img class="image"
+                                 [src]="item.thumbnail.url" />
+                        </td>
+                        <td tuiTd>
+                            {{ item.name }}
+                        </td>
+                        <td tuiTd>
+                            <tui-badge status="success"
+                                       *ngIf="item.status"
+                                       value="Alive"></tui-badge>
+                            <tui-badge status="neutral"
+                                       *ngIf="!item.status"
+                                       value="Deceased"></tui-badge>
+                        </td>
+                        <td tuiTd>
+                            {{ item.createdAt | date: 'M/d/yy, h:mm a' }}
+                        </td>
+                        <ng-template #tableBarTemplate
+                                     let-close>
+                            <div tuiMode="onDark"
+                                 fxLayout="row"
+                                 fxLayoutGap="2rem">
+                                <p>Bạn có chắc rằng muốn xóa không ?</p>
+                                <button tuiButton
+                                        type="button"
+                                        (click)="remove()"
+                                        size="m">
+                                    Đồng ý
+                                </button>
+                                <button tuiButton
+                                        type="button"
+                                        appearance="outline"
+                                        (click)="close()"
+                                        size="m">
+                                    Hủy bỏ
+                                </button>
+                            </div>
+                        </ng-template>
+                    </tr>
+                </tbody>
+            </table>
+        </tui-loader>
+    </div>
+</div>

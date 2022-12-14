@@ -1,0 +1,154 @@
+<div class="nav">
+	<div class="header"
+		 fxLayout="row"
+		 fxLayoutGap="1rem"
+		 fxLayoutAlign="none center">
+		<div fxFlex="15">
+			<a routerLink="">
+				<img class="logo"
+					 [src]="logoSvg">
+			</a>
+		</div>
+		<div class="input-search"
+			 fxLayout="column"
+			 fxLayoutGap="1rem"
+			 fxFlex="65">
+			<app-input-search></app-input-search>
+			<div class="list-category"
+				 fxLayout="row"
+				 fxLayoutGap="3rem"
+				 *ngIf="categories$ | async as categories">
+				<ng-container *ngFor="let item of categories">
+					<tui-hosted-dropdown tuiDropdownAlign="right"
+										 *ngIf="item.subcategories.length > 0;else nochild"
+										 tuiDropdownHover
+										 [content]="category">
+						<a [routerLink]="['home',item.slug]"
+						   fxLayout="row"
+						   fxLayoutGap="0.5rem">
+							<img class="image"
+								 [src]="item.image.url" />
+							<p class="tui-text_body-m">{{item.name}}</p>
+							<tui-svg src="tuiIconChevronDown"></tui-svg>
+						</a>
+					</tui-hosted-dropdown>
+					<ng-template #nochild>
+						<a [routerLink]="['home', item.slug]"
+						   fxLayout="row"
+						   fxLayoutGap="0.5rem">
+							<img class="image"
+								 [src]="item.image.url" />
+							<p class="tui-text_body-m">{{item.name}}</p>
+						</a>
+					</ng-template>
+					<ng-template #category>
+						<tui-data-list style="width:100%;">
+							<a fxLayout="row"
+							   fxLayoutGap="1rem"
+							   fxLayoutAlign="space-between center"
+							   *ngFor="let item of item.subcategories"
+							   [routerLink]="['home',item.slug]"
+							   tuiOption>
+								<img class="image"
+									 [src]="item.image.url" />
+								<p class="tui-text_body-m">{{item.name}}</p>
+							</a>
+						</tui-data-list>
+					</ng-template>
+				</ng-container>
+			</div>
+		</div>
+		<div fxFlex="20"
+			 fxLayout="column"
+			 fxLayoutAlign="center end"
+			 fxLayoutGap="0.5rem">
+			<div class="infor-user">
+				<a *ngIf="!isLoggedIn()"
+				   routerLink="/auth/dang-nhap">
+					<p class="tui-text_body-m"
+					   routerLinkActive="active">
+						Đăng nhập
+					</p>
+				</a>
+				<tui-hosted-dropdown *ngIf="isLoggedIn()"
+									 tuiDropdownHover
+									 [(open)]="open"
+									 [content]="dropdown">
+					<button *ngIf="(user$ | async) as user"
+							tuiButton
+							iconRight="tuiIconChevronDown"
+							appearance="outline"
+							size="s">
+						<tui-avatar style="margin-right: 1rem; width: 32px; height: 30px;"
+									[text]="user.fullname"
+									[avatarUrl]="user.avatar?.url"
+									size="m"
+									[autoColor]="true"
+									[rounded]="true"></tui-avatar>
+						<p fxHide.lt-md
+						   class="tui-text-body-m-2">{{ user.fullname }}</p>
+					</button>
+				</tui-hosted-dropdown>
+			</div>
+			<div fxLayout="row"
+				 fxLayoutGap="1rem">
+				<div class="notification"
+					 *ngIf="(user$ | async) && isAdmin()">
+					<app-notification></app-notification>
+				</div>
+				<div class="cart">
+					<a *ngIf="(user$ | async) as user;else nouser"
+					   routerLink="cart"
+					   class="cart">
+						<tui-badge class="badge"
+								   status="primary"
+								   size="s"
+								   [value]="user.totalItem"></tui-badge>
+						<button tuiIconButton
+								title="Giỏ hàng"
+								appearance="outline"
+								size="m">
+							<img class="icon"
+								 [src]="cartSvg" />
+						</button>
+					</a>
+				</div>
+			</div>
+			<ng-template #nouser>
+				<a routerLink="cart"
+				   class="cart">
+					<tui-badge class="badge"
+							   status="primary"
+							   size="s"
+							   [value]="totalItem$ | async"></tui-badge>
+					<button tuiIconButton
+							appearance="outline"
+							size="m">
+						<img class="icon"
+							 [src]="cartSvg" />
+					</button>
+				</a>
+			</ng-template>
+			<ng-template #dropdown>
+				<tui-data-list>
+					<a routerLink="user"
+					   tuiOption>
+						Taì khoản của tôi
+					</a>
+					<a tuiOption>
+						Đơn mua
+					</a>
+					<a *ngIf="isAdmin()"
+					   routerLink="dashboard"
+					   tuiOption>
+						Dashboard
+					</a>
+					<a (click)="logOut()"
+					   tuiOption>
+						Đăng xuất
+					</a>
+				</tui-data-list>
+			</ng-template>
+		</div>
+	</div>
+</div>
